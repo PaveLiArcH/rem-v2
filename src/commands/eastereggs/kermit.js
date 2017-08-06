@@ -2,8 +2,9 @@
  * Created by Julian/Wolke on 15.11.2016.
  */
 let RRACommand = require('../../structures/rraCommand');
+
 class KermitImage extends RRACommand {
-    constructor({t}) {
+    constructor({ t }) {
         super();
         this.cmd = 'kermit';
         this.cat = 'eastereggs';
@@ -13,4 +14,5 @@ class KermitImage extends RRACommand {
         this.hidden = true;
     }
 }
+
 module.exports = KermitImage;

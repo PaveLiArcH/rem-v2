@@ -13,4 +13,5 @@ class TranslatableError {
         }
     }
 }
+
 module.exports = TranslatableError;

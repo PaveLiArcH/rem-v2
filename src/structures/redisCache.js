@@ -6,14 +6,14 @@ class RedisCache {
         this.client = redisClient;
     }
 
-    async get(id) {
+    async get (id) {
         // console.log(id);
         let val = await this.client.getAsync(id);
         //uwu
         return JSON.parse(val);
     }
 
-    async set(id, value) {
+    async set (id, value) {
         let val = JSON.stringify(value);
         // console.log(value);
         // console.log(id);
@@ -29,4 +29,5 @@ class RedisCache {
         return this.client.existsAsync(id);
     }
 }
+
 module.exports = RedisCache;

@@ -2,8 +2,9 @@
  * Created by Julian/Wolke on 15.11.2016.
  */
 let RRACommand = require('../../structures/rraCommand');
+
 class TriggeredImage extends RRACommand {
-    constructor({t}) {
+    constructor({ t }) {
         super();
         this.cmd = 'triggered';
         this.cat = 'image';
@@ -12,4 +13,5 @@ class TriggeredImage extends RRACommand {
         this.accessLevel = 0;
     }
 }
+
 module.exports = TriggeredImage;

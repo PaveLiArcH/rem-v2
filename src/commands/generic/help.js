@@ -2,9 +2,9 @@
  * Created by Julian on 10.05.2017.
  */
 let Command = require('../../structures/command');
-let winston = require('winston');
+
 class Help extends Command {
-    constructor({t, mod}) {
+    constructor({ t, mod }) {
         super();
         this.cmd = 'help';
         this.aliases = ['commands', 'h', 'cmds'];
@@ -17,7 +17,7 @@ class Help extends Command {
             short: 'help.help.short',
             usage: 'help.help.usage',
             example: 'help.help.example'
-        }
+        };
     }
 
     run(msg) {
@@ -39,7 +39,7 @@ class Help extends Command {
                 } else {
                     return msg.channel.createMessage(this.t('help.command-no-detail', {
                         lngs: msg.lang,
-                        legacy_help: this.t(`help.${command.cmd}`, {lngs: msg.lang})
+                        legacy_help: this.t(`help.${command.cmd}`, { lngs: msg.lang })
                     }));
                 }
             } else {
@@ -63,31 +63,31 @@ class Help extends Command {
     buildCommandHelp(msg, command) {
         let helpMessage = "";
         helpMessage += this.t('help.command-help-title', {
-                lngs: msg.lang,
-                command: command.cmd,
-                prefix: msg.prefix
-            }) + '\n';
+            lngs: msg.lang,
+            command: command.cmd,
+            prefix: msg.prefix
+        }) + '\n';
         if (command.aliases.length > 0) {
             let aliases = command.aliases.map(a => `\`${a}\``);
-            helpMessage += this.t('help.command-aliases', {lngs: msg.lang, aliases: aliases.join(', ')}) + '\n';
+            helpMessage += this.t('help.command-aliases', { lngs: msg.lang, aliases: aliases.join(', ') }) + '\n';
         }
         if (command.help.short) {
-            helpMessage += this.t('help.command-shorthelp', {lngs: msg.lang}) + ' ' + `\`${this.t(command.help.short, {lngs: msg.lang})}\`` + '\n';
+            helpMessage += this.t('help.command-shorthelp', { lngs: msg.lang }) + ' ' + `\`${this.t(command.help.short, { lngs: msg.lang })}\`` + '\n';
         }
         if (command.help.long) {
-            helpMessage += this.t('help.command-longhelp', {lngs: msg.lang}) + '\n' + `\`\`\`${this.t(command.help.long, {lngs: msg.lang})}\`\`\`` + '\n';
+            helpMessage += this.t('help.command-longhelp', { lngs: msg.lang }) + '\n' + `\`\`\`${this.t(command.help.long, { lngs: msg.lang })}\`\`\`` + '\n';
         }
         if (command.help.usage) {
-            helpMessage += this.t('help.command-usage', {lngs: msg.lang}) + ' ' + `\`${this.t(command.help.usage, {
-                    lngs: msg.lang,
-                    prefix: msg.prefix
-                })}\`` + '\n';
+            helpMessage += this.t('help.command-usage', { lngs: msg.lang }) + ' ' + `\`${this.t(command.help.usage, {
+                lngs: msg.lang,
+                prefix: msg.prefix
+            })}\`` + '\n';
         }
         if (command.help.example) {
-            helpMessage += this.t('help.command-example', {lngs: msg.lang}) + '\n' + `${this.t(command.help.example, {
-                    lngs: msg.lang,
-                    prefix: msg.prefix
-                })}` + '\n';
+            helpMessage += this.t('help.command-example', { lngs: msg.lang }) + '\n' + `${this.t(command.help.example, {
+                lngs: msg.lang,
+                prefix: msg.prefix
+            })}` + '\n';
         }
         return helpMessage;
     }
@@ -101,11 +101,11 @@ class Help extends Command {
         let categories = {};
         let helpMessage = "";
         helpMessage += this.t('help.introduction', {
-                lngs: msg.lang,
-                name: rem.user.username,
-                prefix: msg.prefix
-            }) + '\n';
-        helpMessage += this.t('help.categories.list', {lngs: msg.lang}) + '\n';
+            lngs: msg.lang,
+            name: rem.user.username,
+            prefix: msg.prefix
+        }) + '\n';
+        helpMessage += this.t('help.categories.list', { lngs: msg.lang }) + '\n';
         for (let key in commands) {
             if (commands.hasOwnProperty(key)) {
                 let command = commands[key];
@@ -121,7 +121,6 @@ class Help extends Command {
         let sortedCategories = [];
         for (let key in categories) {
             if (categories.hasOwnProperty(key)) {
-                let category = categories[key];
                 sortedCategories.push(key);
                 categories[key].sort((a, b) => {
                     if (a.cmd > b.cmd) {
@@ -131,7 +130,7 @@ class Help extends Command {
                         return -1;
                     }
                     return 0;
-                })
+                });
             }
         }
         sortedCategories.sort((a, b) => {
@@ -147,14 +146,14 @@ class Help extends Command {
         });
         for (let i = 0; i < sortedCategories.length; i++) {
             let category = categories[sortedCategories[i]];
-            helpMessage += '**' + this.t(`help.categories.${sortedCategories[i]}`, {lngs: msg.lang}) + '**' + ': ';
+            helpMessage += '**' + this.t(`help.categories.${sortedCategories[i]}`, { lngs: msg.lang }) + '**' + ': ';
             for (let x = 0; x < category.length; x++) {
                 helpMessage += `\`${category[x].cmd}\``;
                 if (category.length - 1 !== x) {
                     helpMessage += ', ';
                 }
             }
-            helpMessage += '\n\n'
+            helpMessage += '\n\n';
         }
         return helpMessage;
     }
@@ -201,4 +200,5 @@ class Help extends Command {
         return ranking;
     }
 }
+
 module.exports = Help;

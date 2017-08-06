@@ -2,13 +2,15 @@
  * Created by Julian on 28.05.2017.
  */
 const Command = require('../../structures/command');
-const regs = {user: /<?(?:@|@!)([0-9]+)>/, channel: /<?(?:#)([0-9]+)>/, role: /<?(?:@&)([0-9]+)>/};
+
+const regs = { user: /<?(?:@|@!)([0-9]+)>/, channel: /<?(?:#)([0-9]+)>/, role: /<?(?:@&)([0-9]+)>/ };
 let argParser = require('../../structures/argumentParser');
 const utils = require('../../structures/utilities');
 const searcher = require('../../structures/searcher');
 const winston = require('winston');
+
 class AddPermission extends Command {
-    constructor({t, mod}) {
+    constructor({ t, mod }) {
         super();
         this.cmd = 'ap';
         this.cat = 'permission';
@@ -21,7 +23,7 @@ class AddPermission extends Command {
     async run(msg) {
         let messageSplit = msg.content.split(' ').splice(1);
         if (messageSplit.length === 0) {
-            return msg.channel.createMessage(this.t('ap.missing-args', {lngs: msg.lang, prefix: msg.prefix}));
+            return msg.channel.createMessage(this.t('ap.missing-args', { lngs: msg.lang, prefix: msg.prefix }));
         } else {
             let categories = utils.getCategoriesFromCommands(msg.cmds, true);
             let args = argParser.parse(messageSplit);
@@ -34,10 +36,10 @@ class AddPermission extends Command {
                 } else if (parsedArgs.args.u) {
                     target = await this.resolveUser(parsedArgs, msg);
                 } else if (parsedArgs.args.c) {
-                    target = await this.resolveChannel(parsedArgs, msg)
+                    target = await this.resolveChannel(parsedArgs, msg);
                 }
                 if (!target) {
-                    target = {type: 'guild', id: msg.channel.guild.id};
+                    target = { type: 'guild', id: msg.channel.guild.id };
                 }
                 // console.log(target);
                 let perm = this.p.createPermission(parsedArgs.permNode, target.type, target.id, parsedArgs.allow);
@@ -48,28 +50,28 @@ class AddPermission extends Command {
                         lngs: msg.lang,
                         node: `${perm.cat}.${perm.perm}`,
                         allowed: perm.use,
-                        type: this.t(`ap.type.${perm.type}`, {lngs: msg.lang}),
+                        type: this.t(`ap.type.${perm.type}`, { lngs: msg.lang }),
                         name: targetName
                     }));
                 } catch (e) {
                     if (e.message === 'add_defaults') {
                         let defaultPerms = this.p.getDefaultPerms();
                         let permString = defaultPerms.map(p => {
-                            return `${p.cat}.${p.perm} (${p.use})`
+                            return `${p.cat}.${p.perm} (${p.use})`;
                         }).join('\n');
-                        let permQuestion = this.t('ap.add-defaults', {lngs: msg.lang, perm_list: permString});
-                        permQuestion += '\n' + this.t('menu.yes-no-question', {lngs: msg.lang});
+                        let permQuestion = this.t('ap.add-defaults', { lngs: msg.lang, perm_list: permString });
+                        permQuestion += '\n' + this.t('menu.yes-no-question', { lngs: msg.lang });
                         let menuMsg = await msg.channel.createMessage(permQuestion);
                         this.awaitDefaults(msg, perm, menuMsg);
                     } else {
                         winston.error(e);
-                        return msg.channel.createMessage(this.t('generic.error', {lngs: msg.lang}));
+                        return msg.channel.createMessage(this.t('generic.error', { lngs: msg.lang }));
                     }
 
                 }
             } catch (e) {
                 console.log(e);
-                return msg.channel.createMessage(this.t(e.t, {lngs: msg.lang, node: e.node, prefix: msg.prefix}));
+                return msg.channel.createMessage(this.t(e.t, { lngs: msg.lang, node: e.node, prefix: msg.prefix }));
             }
         }
     }
@@ -99,7 +101,7 @@ class AddPermission extends Command {
                         winston.error(e);
                     }
                     clearTimeout(stopTimeout);
-                    return msg.channel.createMessage(this.t('generic.cancelled-command', {lngs: msg.lang}));
+                    return msg.channel.createMessage(this.t('generic.cancelled-command', { lngs: msg.lang }));
                 }
             } else {
                 collector.end();
@@ -116,9 +118,9 @@ class AddPermission extends Command {
                     lngs: msg.lang,
                     node: `${perm.cat}.${perm.perm}`,
                     allowed: perm.use,
-                    type: this.t(`ap.type.${perm.type}`, {lngs: msg.lang}),
+                    type: this.t(`ap.type.${perm.type}`, { lngs: msg.lang }),
                     name: targetName
-                }))
+                }));
             }
         });
     }
@@ -135,7 +137,7 @@ class AddPermission extends Command {
             case 'role':
                 targetName = msg.channel.guild.roles.find(r => r.id === perm.id).name;
                 break;
-            case 'user':
+            case 'user':    // eslint-disable-line no-case-declarations
                 let member = msg.channel.guild.members.find(m => m.id === perm.id);
                 targetName = `${member.user.username}#${member.user.discriminator}` + (member.nick ? `(${member.nick})` : '');
                 break;
@@ -148,7 +150,7 @@ class AddPermission extends Command {
         fullArgs = fullArgs.trim();
         if (regs.role.test(fullArgs)) {
             fullArgs = fullArgs.substring(3);
-            return {type: 'role', id: fullArgs.substring(0, fullArgs.length - 1)};
+            return { type: 'role', id: fullArgs.substring(0, fullArgs.length - 1) };
         } else {
             let roles = utils.searchRoles(msg.channel.guild.roles, fullArgs);
             let pick = await searcher.roleSearchMenu(msg, [fullArgs], this.t);
@@ -156,14 +158,14 @@ class AddPermission extends Command {
                 throw new TranslatableError({
                     t: 'generic.cancelled-command',
                     message: 'User entered a wrong response to menu'
-                })
+                });
             }
             if (pick === -2) {
-                throw new TranslatableError({t: 'search.no-results', message: 'No matching roles could be found'})
+                throw new TranslatableError({ t: 'search.no-results', message: 'No matching roles could be found' });
             }
             if (pick > -1) {
                 let targetRole = roles[pick];
-                return {type: 'role', id: targetRole.id};
+                return { type: 'role', id: targetRole.id };
             }
         }
     }
@@ -177,7 +179,7 @@ class AddPermission extends Command {
             } else {
                 fullArgs = fullArgs.substring(2);
             }
-            return {type: 'user', id: fullArgs.substring(0, fullArgs.length - 1)};
+            return { type: 'user', id: fullArgs.substring(0, fullArgs.length - 1) };
         } else {
             let users = utils.searchUser(msg.channel.guild.members, fullArgs);
             let pick = await searcher.userSearchMenu(msg, [fullArgs], this.t);
@@ -185,14 +187,14 @@ class AddPermission extends Command {
                 throw new TranslatableError({
                     t: 'generic.cancelled-command',
                     message: 'User entered a wrong response to menu'
-                })
+                });
             }
             if (pick === -2) {
-                throw new TranslatableError({t: 'search.no-results', message: 'No matching members could be found'})
+                throw new TranslatableError({ t: 'search.no-results', message: 'No matching members could be found' });
             }
             if (pick > -1) {
                 let targetUser = users[pick];
-                return {type: 'user', id: targetUser.id};
+                return { type: 'user', id: targetUser.id };
             }
         }
     }
@@ -202,7 +204,7 @@ class AddPermission extends Command {
         fullArgs = fullArgs.trim();
         if (regs.user.test(fullArgs)) {
             fullArgs = fullArgs.substring(2);
-            return {type: 'channel', id: fullArgs.substring(0, fullArgs.length - 1)};
+            return { type: 'channel', id: fullArgs.substring(0, fullArgs.length - 1) };
         } else {
             let channels = utils.searchChannel(msg.channel.guild.channels, fullArgs);
             let pick = await searcher.channelSearchMenu(msg, [fullArgs], this.t);
@@ -210,14 +212,14 @@ class AddPermission extends Command {
                 throw new TranslatableError({
                     t: 'generic.cancelled-command',
                     message: 'User entered a wrong response to menu'
-                })
+                });
             }
             if (pick === -2) {
-                throw new TranslatableError({t: 'search.no-results', message: 'No matching channels could be found'})
+                throw new TranslatableError({ t: 'search.no-results', message: 'No matching channels could be found' });
             }
             if (pick > -1) {
                 let targetRole = channels[pick];
-                return {type: 'channel', id: targetRole.id};
+                return { type: 'channel', id: targetRole.id };
             }
         }
     }
@@ -245,16 +247,16 @@ class AddPermission extends Command {
                 permNode,
                 allow,
                 args
-            }
+            };
         }
         throw new TranslatableError({
             t: 'ap.missing-args',
             message: 'not enough arguments were passed with the message'
-        })
+        });
     }
 
     parseAllow(args) {
-        let res = {allow: false, args};
+        let res = { allow: false, args };
         for (let i = 0; i < args._.length; i++) {
             let allow = args._[i];
             if (allow === 'true') {
@@ -271,15 +273,14 @@ class AddPermission extends Command {
         throw new TranslatableError({
             t: 'ap.no-allowance-set',
             message: 'no false or true found in the args'
-        })
+        });
     }
 
     parsePermNode(args, categories, cmds, prefix) {
-        let res = {permNode: '', args};
+        let res = { permNode: '', args };
         for (let i = 0; i < args._.length; i++) {
             let nodeSplit = args._[i].split(".");
             let permNode = "";
-            let node = "";
             if (nodeSplit.length === 2) {
                 if (typeof(categories[nodeSplit[0]]) !== 'undefined') {
                     if (typeof (cmds[nodeSplit[1]]) !== 'undefined') {
@@ -346,4 +347,5 @@ class AddPermission extends Command {
         });
     }
 }
+
 module.exports = AddPermission;

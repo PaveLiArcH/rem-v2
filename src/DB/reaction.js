@@ -2,6 +2,7 @@
  * Created by Julian/Wolke on 23.07.2016.
  */
 let mongoose = require('mongoose');
+
 let reactionSchema = mongoose.Schema({
     id: String,
     guildId: String,

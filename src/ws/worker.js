@@ -4,6 +4,7 @@
 let EventEmitter = require('eventemitter3');
 let websocket = require('ws');
 let OPCODE = require('../structures/constants').MESSAGE_TYPES;
+
 class Worker extends EventEmitter {
     constructor(options) {
         super();
@@ -15,7 +16,7 @@ class Worker extends EventEmitter {
         this.ws = null;
         this.shardId = null;
         this.shardCount = null;
-        this.state = {ready: false, connected: false, hearbeat: -1};
+        this.state = { ready: false, connected: false, hearbeat: -1 };
         this.hearbeatInterval = null;
         this.hearbeatTimeout = null;
         this.shardState = 'init';
@@ -70,7 +71,7 @@ class Worker extends EventEmitter {
         return Math.random() * maxInterval;
     }
 
-    onMessage(msg, flags) {
+    onMessage(msg, flags) { // eslint-disable-line no-unused-vars
         try {
             msg = JSON.parse(msg);
         } catch (e) {
@@ -156,7 +157,7 @@ class Worker extends EventEmitter {
                 shardID: this.shardId,
                 shardToken: remConfig.shard_token
             }));
-        } catch (e) {
+        } catch (e) { // eslint-disable-line empty-block
 
         }
         this.hearbeatInterval = setInterval(() => {
@@ -246,7 +247,7 @@ class Worker extends EventEmitter {
     updateState(state) {
         this.ws.send(JSON.stringify({
             op: OPCODE.STATE_UPDATE, shardToken: remConfig.shard_token,
-            shardID: this.shardId, d: {state}
+            shardID: this.shardId, d: { state }
         }));
         this.shardState = state;
     }
@@ -271,4 +272,5 @@ class Worker extends EventEmitter {
         }
     }
 }
+
 module.exports = Worker;

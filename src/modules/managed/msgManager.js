@@ -6,12 +6,13 @@ let Manager = require('../../structures/manager');
 const winston = require('winston');
 const recursive = require('recursive-readdir');
 let path = require('path');
-let async = require('async');
 let StatsD = require('hot-shots');
-let dogstatsd = new StatsD({host: remConfig.statsd_host});
+
+let dogstatsd = new StatsD({ host: remConfig.statsd_host });
 let stat = `rem_${remConfig.environment}`;
+
 class MessageManager extends Manager {
-    constructor({cm, lm, gm, vm, um, pm, rm, sm, stm, mod}) {
+    constructor({ cm, lm, gm, vm, um, pm, rm, sm, stm, mod }) {
         super();
         this.setMaxListeners(20);
         this.l = lm;
@@ -32,7 +33,7 @@ class MessageManager extends Manager {
     }
 
     init() {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             this.load(this.mod).then(() => {
                 resolve();
             });
@@ -49,8 +50,8 @@ class MessageManager extends Manager {
                 let commands = {};
                 for (let file of files) {
                     if (file.endsWith('.js')) {
-                        let command = require(file);
-                        let cmd = new command({t: this.t, v: this.v, mod});
+                        let command = require(file);         // eslint-disable-line import/no-dynamic-require
+                        let cmd = new command({ t: this.t, v: this.v, mod });
                         commands[cmd.cmd] = cmd;
                         if (cmd.aliases && cmd.aliases.length > 0) {
                             cmd.aliases.forEach((alias) => {
@@ -118,7 +119,7 @@ class MessageManager extends Manager {
                                 } else {
                                     dogstatsd.increment(`${stat}.failed-commands`);
                                     this.s.logCmdStat(msg, cmd, false, 'need-guild');
-                                    return msg.channel.createMessage(this.t('generic.no-pm', {lngs: msg.lang}));
+                                    return msg.channel.createMessage(this.t('generic.no-pm', { lngs: msg.lang }));
                                 }
                             } else {
                                 this.s.logCmdStat(msg, cmd, true);
@@ -191,7 +192,7 @@ class MessageManager extends Manager {
             return Guild;
         } else {
             winston.debug(`There was no Guild attached to the msg, using default settings!`);
-            return {prefix: '!w.', lng: 'en'};
+            return { prefix: '!w.', lng: 'en' };
         }
     }
 
@@ -200,6 +201,7 @@ class MessageManager extends Manager {
         return this.u.loadUser(msg.author);
     }
 }
+
 module.exports = {
     class: MessageManager,
     deps: ['lm', 'vm', 'gm', 'um', 'pm', 'rm', 'cm', 'sm', 'stm'],

@@ -3,9 +3,11 @@
  */
 let Manager = require('../../structures/manager');
 let guildModel = require('../../DB/guild');
+
 let Cache;
 let guildCache;
 const winston = require('winston');
+
 if (remConfig.redis_enabled) {
     Cache = require('./../../structures/redisCache');
     winston.debug('Using Redis Cache for Guilds!');
@@ -14,8 +16,9 @@ if (remConfig.redis_enabled) {
     guildCache = Cache;
     winston.debug('Using Map Cache for Guilds!');
 }
+
 class GuildManager extends Manager {
-    constructor({mod}) {
+    constructor({ mod }) {
         super();
         this.mod = mod;
         this.Raven = mod.getMod('raven');
@@ -52,7 +55,7 @@ class GuildManager extends Manager {
             this.Raven.captureException(e);
             winston.error(e);
         }
-        Guild = await guildModel.findOne({id: id});
+        Guild = await guildModel.findOne({ id: id });
         if (Guild) {
             winston.debug(`Loaded Guild ${id} from Database!`);
             try {
@@ -76,7 +79,7 @@ class GuildManager extends Manager {
         if (!remConfig.redis_enabled) {
             this.sendCacheUpdate(Guild);
         }
-        return guildModel.update({id: id}, {$set: {lng: lng}});
+        return guildModel.update({ id: id }, { $set: { lng: lng } });
     }
 
     async changePrefix(id, prefix, cb) {
@@ -86,7 +89,7 @@ class GuildManager extends Manager {
         if (!remConfig.redis_enabled) {
             this.sendCacheUpdate(Guild);
         }
-        return guildModel.update({id: id}, {$set: {prefix: prefix}}, cb);
+        return guildModel.update({ id: id }, { $set: { prefix: prefix } }, cb);
     }
 
     updateCache(data) {
@@ -96,8 +99,9 @@ class GuildManager extends Manager {
     }
 
     sendCacheUpdate(data) {
-        this.emit('_cache_update', {type: 'guild', data});
+        this.emit('_cache_update', { type: 'guild', data });
     }
 
 }
-module.exports = {class: GuildManager, deps: [], async: false, shortcode: 'gm'};
+
+module.exports = { class: GuildManager, deps: [], async: false, shortcode: 'gm' };

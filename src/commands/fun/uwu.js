@@ -2,8 +2,9 @@
  * Created by Julian/Wolke on 15.11.2016.
  */
 let Command = require('../../structures/command');
+
 class uwu extends Command {
-    constructor({t}) {
+    constructor({ t }) {
         super();
         this.cmd = 'uwu';
         this.cat = 'fun';
@@ -18,4 +19,5 @@ class uwu extends Command {
         msg.channel.createMessage('\u200B' + content + (content !== '' ? ' ' : '') + 'uwu');
     }
 }
+
 module.exports = uwu;

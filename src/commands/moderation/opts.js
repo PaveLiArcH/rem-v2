@@ -2,8 +2,9 @@
  * Created by Julian on 25.05.2017.
  */
 const Command = require('../../structures/command');
+
 class OptionsCommand extends Command {
-    constructor({t, mod}) {
+    constructor({ t, mod }) {
         super();
         this.cmd = 'opts';
         this.aliases = ['options', 'settings'];
@@ -16,11 +17,13 @@ class OptionsCommand extends Command {
             short: 'help.opts.short',
             usage: 'help.opts.usage',
             example: 'help.opts.example'
-        }
+        };
     }
 
-    run(msg) {
+
+    run(msg) {          // eslint-disable-line no-unused-vars
 
     }
 }
+
 module.exports = OptionsCommand;

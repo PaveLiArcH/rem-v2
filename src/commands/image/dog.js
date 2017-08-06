@@ -4,8 +4,9 @@
 let Command = require('../../structures/command');
 let winston = require('winston');
 let request = require('request');
+
 class Dog extends Command {
-    constructor({t}) {
+    constructor({ t }) {
         super();
         this.cmd = 'dog';
         this.cat = 'image';
@@ -21,4 +22,5 @@ class Dog extends Command {
         });
     }
 }
+
 module.exports = Dog;

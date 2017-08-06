@@ -6,6 +6,7 @@ let axios = require('axios');
 let Song = require('../../structures/song');
 let SongTypes = require('../../structures/constants').SONG_TYPES;
 let ytr = require('./youtubeResolver');
+
 class YoutubePlaylistResolver {
     constructor() {
 
@@ -24,7 +25,7 @@ class YoutubePlaylistResolver {
         if (!res.data || !res.data.video) {
             throw new Error(`This id (${id}) seems bad.`);
         }
-        let playlist = {title: res.data.title, author: res.data.author, songs: []};
+        let playlist = { title: res.data.title, author: res.data.author, songs: [] };
         let songs = [];
         for (let i = 0; i < res.data.video.length; i++) {
             let video = res.data.video[i];
@@ -54,4 +55,5 @@ class YoutubePlaylistResolver {
         }
     }
 }
+
 module.exports = new YoutubePlaylistResolver();

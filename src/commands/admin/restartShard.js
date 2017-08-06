@@ -2,9 +2,11 @@
  * Created by Julian/Wolke on 13.01.2017.
  */
 let Command = require('../../structures/command');
+
 let adminId = remConfig.owner_id;
+
 class RestartShard extends Command {
-    constructor({mod}) {
+    constructor({ mod }) {
         super();
         this.cmd = 'restartShard';
         this.cat = 'admin';
@@ -36,7 +38,8 @@ class RestartShard extends Command {
 
     restartShard(id, msg) {
         msg.channel.createMessage(`Restarting Shard ${id + 1}`);
-        this.hub.emitRemote('shard_restart_request', {sid: id, by: msg.author.id, from: rem.options.firstShardID});
+        this.hub.emitRemote('shard_restart_request', { sid: id, by: msg.author.id, from: rem.options.firstShardID });
     }
 }
+
 module.exports = RestartShard;

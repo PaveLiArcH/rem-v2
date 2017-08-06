@@ -28,4 +28,5 @@ class KeyManager {
         this.keyIndex = 0;
     }
 }
+
 module.exports = KeyManager;

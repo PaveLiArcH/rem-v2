@@ -4,13 +4,13 @@
 let EventEmitter = require('eventemitter3');
 let shortid = require('shortid');
 let winston = require('winston');
-let path = require('path');
 let fs = require('fs');
 let SongTypes = require('../../structures/constants').SONG_TYPES;
 let ytr = require('../resolver/youtubeResolver');
-let icy = require('icy');
+let icy = require('icy');                               // eslint-disable-line no-unused-vars
 const WolkeStream = require('./WolkeStream');
-let ytdl = require('ytdl-core');
+let ytdl = require('ytdl-core');                        // eslint-disable-line no-unused-vars
+
 // let BufferedStream = require("buffered2").BufferedStream;
 /**
  * The audio player
@@ -28,7 +28,7 @@ class Player extends EventEmitter {
         super();
         this.setMaxListeners(20);
         this.msg = msg;
-        this.queue = queue ? queue : {id: msg.channel.guild.id, repeat: 'off', voteskips: [], songs: [], time: ''};
+        this.queue = queue ? queue : { id: msg.channel.guild.id, repeat: 'off', voteskips: [], songs: [], time: '' };
         this.connection = connection;
         this.song = null;
         this.channel = '';
@@ -125,7 +125,6 @@ class Player extends EventEmitter {
                 }
                 default:
                     return this.nextSong();
-                    break;
             }
             this.connection.once('end', () => {
                 winston.info("File ended!");
@@ -348,7 +347,7 @@ class Player extends EventEmitter {
             if (!this.connection.current) {
                 try {
                     time = this.connection.getTimestamp();
-                } catch (e) {
+                } catch (e) {               // eslint-disable-line empty-block
 
                 }
             } else {
@@ -410,7 +409,7 @@ class Player extends EventEmitter {
         }
     }
 
-    startQueue(msg) {
+    startQueue(msg) {                           // eslint-disable-line no-unused-vars
 
     }
 
@@ -418,11 +417,11 @@ class Player extends EventEmitter {
 
     }
 
-    removeFromQueue(index) {
+    removeFromQueue(index) {                    // eslint-disable-line no-unused-vars
 
     }
 
-    moveInQueue(oldIndex, newIndex) {
+    moveInQueue(oldIndex, newIndex) {           // eslint-disable-line no-unused-vars
 
     }
 
@@ -447,4 +446,5 @@ class Player extends EventEmitter {
         return ((h > 0 ? h + ':' + (m < 10 ? '0' : '') : '') + m + ':' + (s < 10 ? '0' : '') + s);
     }
 }
+
 module.exports = Player;

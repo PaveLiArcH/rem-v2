@@ -2,11 +2,10 @@
  * Created by Julian/Wolke on 07.11.2016.
  */
 let Command = require('../../structures/command');
-let moment = require('moment');
 let winston = require('winston');
-let _ = require('lodash');
+
 class GuildFinder extends Command {
-    constructor({t, mod}) {
+    constructor({ t, mod }) {
         super();
         this.cmd = 'shardinfo';
         this.cat = 'admin';
@@ -30,15 +29,12 @@ class GuildFinder extends Command {
 
     fetchData(msg) {
         return new Promise((resolve, reject) => {
-                this.hub.on(`action_resolved_${msg.id}`, (data) => {
-                    if (data.err) reject(data.err);
-                    resolve(data);
-                });
-                this.hub.executeAction('shard_info', msg.id);
-            }
-        )
-            ;
-
+            this.hub.on(`action_resolved_${msg.id}`, (data) => {
+                if (data.err) reject(data.err);
+                resolve(data);
+            });
+            this.hub.executeAction('shard_info', msg.id);
+        });
     }
 
     buildReply(msg, data, time) {
@@ -56,9 +52,8 @@ class GuildFinder extends Command {
                 color: 0x00ADFF
             }
         };
-        msg.channel.createMessage(reply).then().catch(err => {
-            // console.error(err);
-        });
+        msg.channel.createMessage(reply)
+            .then().catch(winston.info);
     }
 
     buildShardData(data) {
@@ -113,4 +108,5 @@ ID: ${shard.host}
         return pairArray;
     }
 }
+
 module.exports = GuildFinder;

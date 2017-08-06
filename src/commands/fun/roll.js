@@ -2,8 +2,9 @@
  * Created by Julian/Wolke on 15.11.2016.
  */
 let Command = require('../../structures/command');
+
 class Roll extends Command {
-    constructor({t}) {
+    constructor({ t }) {
         super();
         this.cmd = 'roll';
         this.cat = 'fun';
@@ -14,7 +15,7 @@ class Roll extends Command {
             short: 'help.roll.short',
             usage: 'help.roll.usage',
             example: 'help.roll.example'
-        }
+        };
     }
 
     random(min, max) {
@@ -28,13 +29,13 @@ class Roll extends Command {
             try {
                 number = parseInt(messageSplit[1]);
             } catch (e) {
-                return msg.channel.createMessage(this.t('generic.whole-num', {lngs: msg.lang}));
+                return msg.channel.createMessage(this.t('generic.whole-num', { lngs: msg.lang }));
             }
             if (isNaN(number)) {
-                return msg.channel.createMessage(this.t('generic.nan', {lngs: msg.lang}));
+                return msg.channel.createMessage(this.t('generic.nan', { lngs: msg.lang }));
             }
             if (number < 1) {
-                return msg.channel.createMessage(this.t('roll.negative', {number: number, lngs: msg.lang}));
+                return msg.channel.createMessage(this.t('roll.negative', { number: number, lngs: msg.lang }));
             }
         }
         msg.channel.createMessage(this.t('roll.success', {
@@ -44,4 +45,5 @@ class Roll extends Command {
         }));
     }
 }
+
 module.exports = Roll;

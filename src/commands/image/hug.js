@@ -2,8 +2,9 @@
  * Created by Julian/Wolke on 15.11.2016.
  */
 let RRACommand = require('../../structures/rraCommand');
+
 class HugImage extends RRACommand {
-    constructor({t}) {
+    constructor({ t }) {
         super();
         this.cmd = 'hug';
         this.cat = 'image';
@@ -12,4 +13,5 @@ class HugImage extends RRACommand {
         this.accessLevel = 0;
     }
 }
+
 module.exports = HugImage;

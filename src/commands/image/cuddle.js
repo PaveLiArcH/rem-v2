@@ -3,8 +3,9 @@
  */
 
 let RRACommand = require('../../structures/rraCommand');
+
 class CuddleImage extends RRACommand {
-    constructor({t}) {
+    constructor({ t }) {
         super();
         this.cmd = 'cuddle';
         this.cat = 'image';
@@ -13,4 +14,5 @@ class CuddleImage extends RRACommand {
         this.accessLevel = 0;
     }
 }
+
 module.exports = CuddleImage;

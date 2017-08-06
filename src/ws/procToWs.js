@@ -2,6 +2,7 @@
  * Created by Julian/Wolke on 29.04.2017.
  */
 const EventEmitter = require('events').EventEmitter;
+
 class ProcToWs extends EventEmitter {
     constructor() {
         super();
@@ -13,7 +14,7 @@ class ProcToWs extends EventEmitter {
             } catch (e) {
                 console.error(e);
             }
-        })
+        });
     }
 
     checkMessage(msg) {
@@ -40,27 +41,28 @@ class ProcToWs extends EventEmitter {
     }
 
     forwardMessage(d) {
-        process.send(JSON.stringify({type: "msg", d}));
+        process.send(JSON.stringify({ type: "msg", d }));
     }
 
     updateStats(stats) {
-        this.forwardMessage({action: 'updateStats', d: stats});
+        this.forwardMessage({ action: 'updateStats', d: stats });
     }
 
     executeAction(action, actionId) {
-        this.forwardMessage({action: 'executeAction', d: {action, actionId}});
+        this.forwardMessage({ action: 'executeAction', d: { action, actionId } });
     }
 
     respondAction(event, data) {
-        this.forwardMessage({action: 'respondAction', d: {event, data}});
+        this.forwardMessage({ action: 'respondAction', d: { event, data } });
     }
 
     updateState(state) {
-        this.forwardMessage({action: 'updateState', d: {state}});
+        this.forwardMessage({ action: 'updateState', d: { state } });
     }
 
     send(msg) {
-        this.forwardMessage(JSON.stringify({action: 'message', d: msg}))
+        this.forwardMessage(JSON.stringify({ action: 'message', d: msg }));
     }
 }
+
 module.exports = ProcToWs;

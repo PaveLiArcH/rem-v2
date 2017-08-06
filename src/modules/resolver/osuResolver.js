@@ -9,16 +9,17 @@
 let BasicImporter = require('../../structures/basicImporter');
 let winston = require('winston');
 let fs = require('fs');
-let path = require('path');
 let child_process = require('child_process');
 const types = require('../../structures/constants').SONG_TYPES;
 const Song = require('../../structures/song');
+
 let config = remConfig;
 const osu = require('node-osu');
+
 let osuApi = new osu.Api(config.osu_token);
-let setRegex = /.*http(s|):\/\/osu.ppy.sh\/(s|b)\/([0-9]*)((\?|\&)m=[0-9]|)/;
-let regex = /(?:http(?:s|):\/\/osu.ppy.sh\/(s|b)\/([0-9]*)((\?|\&)m=[0-9]|))/;
-let notAvailableRegex = /This download is no longer available/i;
+let setRegex = /.*http(s|):\/\/osu.ppy.sh\/(s|b)\/([0-9]*)((\?|\&)m=[0-9]|)/;         // eslint-disable-line no-useless-escape
+let regex = /(?:http(?:s|):\/\/osu.ppy.sh\/(s|b)\/([0-9]*)((\?|\&)m=[0-9]|))/;        // eslint-disable-line no-useless-escape
+
 class OsuImporter extends BasicImporter {
     constructor() {
         super();
@@ -77,8 +78,8 @@ class OsuImporter extends BasicImporter {
 
     downloadOsuMap(map) {
         return new Promise((resolve, reject) => {
-            let loader = child_process.fork('./modules/worker/osu.js', [], {env: process.env});
-            loader.send({type: 'info', map: map});
+            let loader = child_process.fork('./modules/worker/osu.js', [], { env: process.env });
+            loader.send({ type: 'info', map: map });
             loader.once('message', (m) => {
                 if (m.type === 'result') {
                     resolve(m.map);
@@ -124,4 +125,5 @@ class OsuImporter extends BasicImporter {
         });
     }
 }
+
 module.exports = new OsuImporter();

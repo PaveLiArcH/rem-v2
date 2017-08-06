@@ -2,8 +2,9 @@
  * Created by EpicPick on 13.11.2016.
  */
 let Command = require('../../structures/command');
+
 class Lenny extends Command {
-    constructor({t}) {
+    constructor({ t }) {
         super();
         this.cmd = 'lenny';
         this.cat = 'fun';
@@ -14,7 +15,7 @@ class Lenny extends Command {
             short: 'help.lenny.short',
             usage: 'help.lenny.usage',
             example: 'help.lenny.example'
-        }
+        };
     }
 
     run(msg) {
@@ -23,4 +24,5 @@ class Lenny extends Command {
         msg.channel.createMessage('\u200B' + content + (content !== '' ? ' ' : '') + '( ͡° ͜ʖ ͡°)');
     }
 }
+
 module.exports = Lenny;

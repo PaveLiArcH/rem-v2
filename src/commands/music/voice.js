@@ -2,6 +2,7 @@
  * Created by Julian/Wolke on 07.11.2016.
  */
 let Command = require('../../structures/command');
+
 /**
  * The join voice command
  * @extends Command
@@ -13,7 +14,7 @@ class Voice extends Command {
      * @param {Function} t - the translation module
      * @param {Object} v - the voice manager
      */
-    constructor({t, v}) {
+    constructor({ t, v }) {
         super();
         this.cmd = 'voice';
         this.cat = 'music';
@@ -21,13 +22,12 @@ class Voice extends Command {
         this.t = t;
         this.v = v;
         this.accessLevel = 0;
-        this.aliases = ['join']
+        this.aliases = ['join'];
     }
 
     async run(msg) {
         try {
             let player = await this.v.join(msg);
-            let conn = player.connection;
             let node = player.connection.region ? `${player.connection.region}:${player.connection.nodeID}` : '';
             if (node !== '') {
                 return msg.channel.createMessage(this.t('joinVoice.join_region', {
@@ -35,11 +35,12 @@ class Voice extends Command {
                     node
                 }));
             }
-            msg.channel.createMessage(this.t('joinVoice.join', {lngs: msg.lang}));
+            msg.channel.createMessage(this.t('joinVoice.join', { lngs: msg.lang }));
         } catch (err) {
             console.error(err);
-            msg.channel.createMessage(this.t(err instanceof TranslatableError ? err.t : 'generic.error', {lngs: msg.lang}));
+            msg.channel.createMessage(this.t(err instanceof TranslatableError ? err.t : 'generic.error', { lngs: msg.lang }));
         }
     }
 }
+
 module.exports = Voice;

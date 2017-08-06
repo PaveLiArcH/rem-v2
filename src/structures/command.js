@@ -6,7 +6,7 @@
  *
  */
 class Command {
-    constructor () {
+    constructor() {
         this.aliases = [];
     }
 
@@ -14,8 +14,9 @@ class Command {
      * The main function of the command
      * @param {Object} msg
      */
-    run (msg) {
+    run(msg) {       // eslint-disable-line no-unused-vars
 
     }
 }
+
 module.exports = Command;

@@ -2,9 +2,10 @@
  * Created by Julian/Wolke on 07.11.2016.
  */
 let Command = require('../../structures/command');
-let clientId = require('../../../main.json').client_id;
+let clientId = require('../../../config/main.json').client_id;
+
 class Invite extends Command {
-    constructor({t}) {
+    constructor({ t }) {
         super();
         this.cmd = 'invite';
         this.cat = 'generic';
@@ -14,12 +15,13 @@ class Invite extends Command {
         this.aliases = ['add'];
         this.help = {
             short: 'help.add.short'
-        }
+        };
     }
 
     run(msg) {
         const inviteLink = 'https://discordapp.com/oauth2/authorize?client_id=' + clientId + '&scope=bot&permissions=0';
-        msg.channel.createMessage(this.t('add', {lngs: msg.lang, link: inviteLink}))
+        msg.channel.createMessage(this.t('add', { lngs: msg.lang, link: inviteLink }));
     }
 }
+
 module.exports = Invite;

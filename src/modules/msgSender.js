@@ -2,7 +2,8 @@
  * Created by Julian/Wolke on 11.12.2016.
  */
 let winston = require('winston');
-class msgSender {
+
+class msgSender {                            // eslint-disable-line no-unused-vars
     constructor(bot) {
         this.b = bot;
     }

@@ -2,12 +2,12 @@
  * Created by Julian/Wolke on 07.11.2016.
  */
 let Command = require('../../structures/command');
-let minimist = require('minimist');
 let AsciiTable = require('ascii-table');
 let argParser = require('../../structures/argumentParser');
 const winston = require('winston');
+
 class GetPermission extends Command {
-    constructor({t, mod}) {
+    constructor({ t, mod }) {
         super();
         this.cmd = 'rp';
         this.cat = 'permission';
@@ -19,7 +19,7 @@ class GetPermission extends Command {
 
     run(msg) {
         let messageSplit = msg.content.split(' ').splice(1);
-        let args = argParser.parse(messageSplit, {boolean: ['r', 'c', 'u']});
+        let args = argParser.parse(messageSplit, { boolean: ['r', 'c', 'u'] });
         let start = this.parseStart(args);
         if (args.r) {
             this.getPerms(msg, 'role', start);
@@ -56,28 +56,28 @@ class GetPermission extends Command {
         } catch (e) {
             winston.error(e);
             if (e.t) {
-                return msg.channel.createMessage(this.t(e.t, {lngs: msg.lang}));
+                return msg.channel.createMessage(this.t(e.t, { lngs: msg.lang }));
             }
-            return msg.channel.createMessage(this.t('generic.error', {lngs: msg.lang}));
+            return msg.channel.createMessage(this.t('generic.error', { lngs: msg.lang }));
         }
         let table = new AsciiTable();
-        table.setHeading(this.t('gp.table.id', {lngs: msg.lang}),
+        table.setHeading(this.t('gp.table.id', { lngs: msg.lang }),
             this.t('gp.table.id',
-                {lngs: msg.lang}),
+                { lngs: msg.lang }),
             this.t('gp.table.name',
-                {lngs: msg.lang}),
+                { lngs: msg.lang }),
             this.t('gp.table.type',
-                {lngs: msg.lang}),
-            this.t('gp.table.cat', {lngs: msg.lang}),
-            this.t('gp.table.perm', {lngs: msg.lang}),
-            this.t('gp.table.use', {lngs: msg.lang}));
+                { lngs: msg.lang }),
+            this.t('gp.table.cat', { lngs: msg.lang }),
+            this.t('gp.table.perm', { lngs: msg.lang }),
+            this.t('gp.table.use', { lngs: msg.lang }));
         let added = [];
         let filteredPerms = Perms.filter((val) => val.type === type);
         if (filteredPerms.length === 0) {
-            return msg.channel.createMessage(this.t('gp.no-cat', {lngs: msg.lang, cat: type}));
+            return msg.channel.createMessage(this.t('gp.no-cat', { lngs: msg.lang, cat: type }));
         }
         if (filteredPerms.length / 8 < start) {
-            return msg.channel.createMessage(this.t('gp.page-does-not-exist', {lngs: msg.lang}));
+            return msg.channel.createMessage(this.t('gp.page-does-not-exist', { lngs: msg.lang }));
         }
         for (let i = start * 8; i < filteredPerms.length; i++) {
             if (filteredPerms[i].type === 'channel') {
@@ -100,7 +100,7 @@ class GetPermission extends Command {
 
         table.addRow('c', this.t('generic.cancel'));
         let tableString = '```' + table.toString() + '```';
-        tableString = (filteredPerms.length > 8 ? `${this.t('generic.page', {lngs: msg.lang})}: [${start + 1}/${Math.floor((filteredPerms.length / 8) - 0.01) + 1}]` : '') + tableString;
+        tableString = (filteredPerms.length > 8 ? `${this.t('generic.page', { lngs: msg.lang })}: [${start + 1}/${Math.floor((filteredPerms.length / 8) - 0.01) + 1}]` : '') + tableString;
         msg.channel.createMessage(tableString);
         this.startCollector(msg, added, start);
     }
@@ -119,11 +119,11 @@ class GetPermission extends Command {
                 number = -200;
             }
             if (collMsg.content.startsWith(msg.prefix)) {
-                collMsg.channel.createMessage(this.t('generic.abort', {lngs: msg.lang}));
+                collMsg.channel.createMessage(this.t('generic.abort', { lngs: msg.lang }));
                 collector.stop();
             }
             if (collMsg.content === 'c') {
-                collMsg.channel.createMessage(this.t('generic.abort', {lngs: msg.lang}));
+                collMsg.channel.createMessage(this.t('generic.abort', { lngs: msg.lang }));
                 collector.stop();
             }
             // console.log(added.length);
@@ -148,13 +148,14 @@ class GetPermission extends Command {
                 } catch (e) {
                     winston.error(e);
                     if (e.t) {
-                        return msg.channel.createMessage(this.t(e.t, {lngs: msg.lang}));
+                        return msg.channel.createMessage(this.t(e.t, { lngs: msg.lang }));
                     }
-                    return msg.channel.createMessage(this.t('generic.error', {lngs: msg.lang}));
+                    return msg.channel.createMessage(this.t('generic.error', { lngs: msg.lang }));
                 }
 
             }
         });
     }
 }
+
 module.exports = GetPermission;

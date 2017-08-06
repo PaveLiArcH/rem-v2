@@ -44,4 +44,5 @@ class BasicImporter {
     }
 
 }
+
 module.exports = BasicImporter;

@@ -3,8 +3,9 @@
  */
 
 let RRACommand = require('../../structures/rraCommand');
+
 class NyanImage extends RRACommand {
-    constructor({t}) {
+    constructor({ t }) {
         super();
         this.cmd = 'nyan';
         this.cat = 'image';
@@ -13,4 +14,5 @@ class NyanImage extends RRACommand {
         this.accessLevel = 0;
     }
 }
+
 module.exports = NyanImage;

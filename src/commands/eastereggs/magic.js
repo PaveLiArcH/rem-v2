@@ -2,8 +2,9 @@
  * Created by Julian/Wolke on 07.11.2016.
  */
 let Command = require('../../structures/command');
+
 class Magic extends Command {
-    constructor({t}) {
+    constructor({ t }) {
         super();
         this.cmd = 'magic';
         this.cat = 'eastereggs';
@@ -14,7 +15,8 @@ class Magic extends Command {
     }
 
     run(msg) {
-        msg.channel.createMessage(this.t('eastereggs.magic', {lngs: msg.lang}));
+        msg.channel.createMessage(this.t('eastereggs.magic', { lngs: msg.lang }));
     }
 }
+
 module.exports = Magic;

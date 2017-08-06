@@ -12,8 +12,10 @@ const types = require('../../structures/constants').SONG_TYPES;
 let Song = require('../../structures/song');
 let ytdl = require('ytdl-core');
 let youtube_dl = require('youtube-dl');
+
 Promise.promisifyAll(youtube_dl);
 Promise.promisifyAll(ytdl);
+
 class YoutubeImporter extends BasicImporter {
     constructor() {
         super();
@@ -33,7 +35,7 @@ class YoutubeImporter extends BasicImporter {
                 info.loaderUrl = `https://www.youtube.com/watch?v=${info.video_id}`;
                 let streamUrl = this.filterLiveStreams(info.formats);
                 if (!streamUrl) {
-                    return Promise.reject({message: 'No suitable format found!'});
+                    return Promise.reject({ message: 'No suitable format found!' });
                 } else {
                     return new Song({
                         id: info.video_id,
@@ -127,4 +129,5 @@ class YoutubeImporter extends BasicImporter {
         return formats[0].url;
     }
 }
+
 module.exports = new YoutubeImporter();

@@ -4,9 +4,11 @@
 let Command = require('../../structures/command');
 let winston = require('winston');
 let request = require('request');
+
 let key = remConfig.lbsearch_sfw_key;
+
 class Ibsafe extends Command {
-    constructor({t}) {
+    constructor({ t }) {
         super();
         this.cmd = 'ibsafe';
         this.cat = 'misc';
@@ -31,10 +33,10 @@ class Ibsafe extends Command {
             qs: {
                 limit: 100,
                 q: msgSearch
-            }, headers: {'X-lbSearch-Key': key}
+            }, headers: { 'X-lbSearch-Key': key }
         }, (error, response, body) => {
             if (error) {
-                msg.channel.createMessage(this.t('generic.error', {lngs: msg.lang}));
+                msg.channel.createMessage(this.t('generic.error', { lngs: msg.lang }));
             }
             if (!error && response.statusCode == 200) {
                 try {
@@ -56,4 +58,5 @@ class Ibsafe extends Command {
         });
     }
 }
+
 module.exports = Ibsafe;

@@ -6,8 +6,9 @@ let moment = require('moment');
 let winston = require('winston');
 const utils = require('../../structures/utilities');
 const searcher = require('../../structures/searcher');
+
 class UserInfo extends Command {
-    constructor({t, mod}) {
+    constructor({ t, mod }) {
         super();
         this.cmd = 'uinfo';
         this.cat = 'misc';
@@ -30,10 +31,10 @@ class UserInfo extends Command {
             let users = utils.searchUser(msg.channel.guild.members, msgSplit.join(' '));
             let pick = await searcher.userSearchMenu(msg, msgSplit, this.t);
             if (pick === -1) {
-                return msg.channel.createMessage(this.t('generic.cancelled-command', {lngs: msg.lang}));
+                return msg.channel.createMessage(this.t('generic.cancelled-command', { lngs: msg.lang }));
             }
             if (pick === -2) {
-                return msg.channel.createMessage(this.t('search.no-results', {lngs: msg.lang}));
+                return msg.channel.createMessage(this.t('search.no-results', { lngs: msg.lang }));
             }
             if (pick > -1) {
                 member = users[pick];
@@ -48,7 +49,18 @@ class UserInfo extends Command {
     }
 
     async buildReply(msg, user, member) {
-        let avatar = user.avatar ? (user.avatar.startsWith('a_') ? `​https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.gif` : `​https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.webp`) : user.defaultAvatarURL;
+        let avatar;
+
+        if (user.avatar) {
+            if (user.avatar.startsWith('a_')) {
+                avatar = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.gif`;
+            }
+            else {
+                avatar = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.webp`;
+            }
+        } else {
+            user.defaultAvatarURL;
+        }
         avatar = avatar.replace(/[^a-zA-Z0-9_\-./:]/, '');
         avatar += '?size=1024';
         if (user.avatar.startsWith('a_')) {
@@ -59,11 +71,11 @@ class UserInfo extends Command {
             let reply = {
                 embed: {
                     author: {
-                        name: `${this.t('user-info.info', {lngs: msg.lang})}: ${user.username}#${user.discriminator}`,
+                        name: `${this.t('user-info.info', { lngs: msg.lang })}: ${user.username}#${user.discriminator}`,
                         icon_url: avatar
                     },
                     fields: this.buildUserInfo(msg, user, member, dbUser),
-                    image: {url: avatar},
+                    image: { url: avatar },
                     color: 0x00ADFF
                 }
             };
@@ -79,37 +91,37 @@ class UserInfo extends Command {
     buildUserInfo(msg, user, member, dbUser) {
         moment.locale(msg.lang[0]);
         let fields = [];
-        fields.push({name: this.t('user-info.id', {lngs: msg.lang}), value: user.id, inline: true});
-        fields.push({name: this.t('user-info.name', {lngs: msg.lang}), value: user.username, inline: true});
+        fields.push({ name: this.t('user-info.id', { lngs: msg.lang }), value: user.id, inline: true });
+        fields.push({ name: this.t('user-info.name', { lngs: msg.lang }), value: user.username, inline: true });
         fields.push({
-            name: this.t('user-info.discriminator', {lngs: msg.lang}),
+            name: this.t('user-info.discriminator', { lngs: msg.lang }),
             value: user.discriminator,
             inline: true
         });
         fields.push({
-            name: this.t('user-info.created', {lngs: msg.lang}),
+            name: this.t('user-info.created', { lngs: msg.lang }),
             value: moment().to(user.createdAt),
             inline: true
         });
         if (member) {
             if (member.nick) {
-                fields.push({name: this.t('user-info.nick', {lngs: msg.lang}), value: member.nick, inline: true});
+                fields.push({ name: this.t('user-info.nick', { lngs: msg.lang }), value: member.nick, inline: true });
             }
-            fields.push({name: this.t('user-info.status', {lngs: msg.lang}), value: member.status, inline: true});
+            fields.push({ name: this.t('user-info.status', { lngs: msg.lang }), value: member.status, inline: true });
             if (member.game) {
                 fields.push({
-                    name: this.t('user-info.playing', {lngs: msg.lang}),
+                    name: this.t('user-info.playing', { lngs: msg.lang }),
                     value: member.game.name,
                     inline: true
                 });
             }
             fields.push({
-                name: this.t('user-info.join', {lngs: msg.lang}),
+                name: this.t('user-info.join', { lngs: msg.lang }),
                 value: moment().to(member.joinedAt),
                 inline: true
             });
             fields.push({
-                name: this.t('user-info.role', {lngs: msg.lang}),
+                name: this.t('user-info.role', { lngs: msg.lang }),
                 value: member.roles.length,
                 inline: true
             });
@@ -120,11 +132,12 @@ class UserInfo extends Command {
             inline: true
         });
         fields.push({
-            name: this.t('user-info.bot', {lngs: msg.lang}),
+            name: this.t('user-info.bot', { lngs: msg.lang }),
             value: user.bot ? ':white_check_mark: ' : ':x: ',
             inline: true
         });
         return fields;
     }
 }
+
 module.exports = UserInfo;

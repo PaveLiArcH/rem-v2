@@ -2,6 +2,7 @@
  * Created by Julian/Wolke on 18.01.2016.
  */
 let Manager = require('../../structures/manager');
+
 class SearchManager extends Manager {
     constructor() {
         super();
@@ -19,4 +20,5 @@ class SearchManager extends Manager {
 
     }
 }
-module.exports = {class: SearchManager, deps: [], async: false, shortcode: 'sem'};
+
+module.exports = { class: SearchManager, deps: [], async: false, shortcode: 'sem' };

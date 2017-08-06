@@ -7,8 +7,9 @@ let winston = require('winston');
 let _ = require('lodash');
 let version = require('../../../package.json').version;
 let erisVersion = require('../../../node_modules/eris/package.json').version;
+
 class BotInfo extends Command {
-    constructor({t, mod}) {
+    constructor({ t, mod }) {
         super();
         this.cmd = 'bot';
         this.cat = 'misc';
@@ -58,9 +59,7 @@ class BotInfo extends Command {
                 color: 0x00ADFF
             }
         };
-        msg.channel.createMessage(reply).then().catch(err => {
-            // console.error(err);
-        });
+        msg.channel.createMessage(reply).then().catch(winston.info);
     }
 
     buildBotInfo(msg, data) {
@@ -76,7 +75,7 @@ class BotInfo extends Command {
         let shard_channels = rem.guilds.map(g => g.channels.size).reduce((a, b) => a + b);
         let shard_voice = this.v.getVoiceConnections();
         let shard_voice_playing = this.v.getVoiceConnections(true);
-        _.forIn(data.shards, (value, key) => {
+        _.forIn(data.shards, (value) => {
             guilds += value.guilds;
             users += value.users;
             channels += value.channels;
@@ -84,35 +83,36 @@ class BotInfo extends Command {
             voice_playing += value.voice_active;
         });
         fields.push({
-            name: this.t('bot-info.uptime', {lngs: msg.lang}),
+            name: this.t('bot-info.uptime', { lngs: msg.lang }),
             value: moment().to(rem.startTime),
             inline: true
         });
-        fields.push({name: this.t('generic.version', {lngs: msg.lang}), value: version, inline: true});
-        fields.push({name: this.t('bot-info.made', {lngs: msg.lang}), value: 'Wolke, Dean, Veld', inline: true});
-        fields.push({name: this.t('bot-info.lib', {lngs: msg.lang}), value: `Eris ${erisVersion}`, inline: true});
-        fields.push({name: this.t('bot-info.guilds', {lngs: msg.lang}), value: guilds, inline: true});
-        fields.push({name: this.t('bot-info.users', {lngs: msg.lang}), value: users, inline: true});
-        fields.push({name: this.t('bot-info.channels', {lngs: msg.lang}), value: channels, inline: true});
+        fields.push({ name: this.t('generic.version', { lngs: msg.lang }), value: version, inline: true });
+        fields.push({ name: this.t('bot-info.made', { lngs: msg.lang }), value: 'Wolke, Dean, Veld', inline: true });
+        fields.push({ name: this.t('bot-info.lib', { lngs: msg.lang }), value: `Eris ${erisVersion}`, inline: true });
+        fields.push({ name: this.t('bot-info.guilds', { lngs: msg.lang }), value: guilds, inline: true });
+        fields.push({ name: this.t('bot-info.users', { lngs: msg.lang }), value: users, inline: true });
+        fields.push({ name: this.t('bot-info.channels', { lngs: msg.lang }), value: channels, inline: true });
         fields.push({
-            name: `${this.t('bot-info.voice_active', {lngs: msg.lang})}/${this.t('bot-info.voice', {lngs: msg.lang})}`,
+            name: `${this.t('bot-info.voice_active', { lngs: msg.lang })}/${this.t('bot-info.voice', { lngs: msg.lang })}`,
             value: `${voice_playing}/${voice}`,
             inline: true
         });
         fields.push({
-            name: `${this.t('bot-info.voice_active', {lngs: msg.lang})}/${this.t('bot-info.voice', {lngs: msg.lang})} (${this.t('bot-info.shard', {lngs: msg.lang})})`,
+            name: `${this.t('bot-info.voice_active', { lngs: msg.lang })}/${this.t('bot-info.voice', { lngs: msg.lang })} (${this.t('bot-info.shard', { lngs: msg.lang })})`,
             value: `${shard_voice_playing}/${shard_voice}`,
             inline: true
         });
-        fields.push({name: this.t('bot-info.guilds-s', {lngs: msg.lang}), value: shard_guilds, inline: true});
-        fields.push({name: this.t('bot-info.users-s', {lngs: msg.lang}), value: shard_users, inline: true});
-        fields.push({name: this.t('bot-info.channels-s', {lngs: msg.lang}), value: shard_channels, inline: true});
+        fields.push({ name: this.t('bot-info.guilds-s', { lngs: msg.lang }), value: shard_guilds, inline: true });
+        fields.push({ name: this.t('bot-info.users-s', { lngs: msg.lang }), value: shard_users, inline: true });
+        fields.push({ name: this.t('bot-info.channels-s', { lngs: msg.lang }), value: shard_channels, inline: true });
         fields.push({
-            name: this.t('bot-info.shard', {lngs: msg.lang}),
+            name: this.t('bot-info.shard', { lngs: msg.lang }),
             value: `${rem.options.firstShardID + 1}/${rem.options.maxShards}`,
             inline: true
         });
         return fields;
     }
 }
+
 module.exports = BotInfo;

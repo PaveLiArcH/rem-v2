@@ -1,8 +1,9 @@
 /**
  * Created by Julian/Wolken on 19.11.2016.
  */
-let utils = require('./utilities');
+let utils = require('./utilities');      // eslint-disable-line no-unused-vars
 let winston = require('winston');
+
 class Selector {
     constructor(msg, collection, t, cb) {
         this.msg = msg;
@@ -19,8 +20,8 @@ class Selector {
             return `[${i}] ${c}`;
 
         });
-        this.coll.addRow('c', this.t('generic.cancel', {lngs: this.msg.lang}));
-        this.msg.channel.createMessage('```' + table.toString() + '```').then(tableMsg => {
+        this.coll.addRow('c', this.t('generic.cancel', { lngs: this.msg.lang }));
+        this.msg.channel.createMessage('```' + table.toString() + '```').then(tableMsg => { // eslint-disable-line no-undef
             let collector = this.msg.CON.addCollector(this.msg.channel.id);
             collector.on('message', (msg) => {
                 if (this.filterMessage(msg)) {
@@ -58,4 +59,5 @@ class Selector {
         }
     }
 }
+
 module.exports = Selector;

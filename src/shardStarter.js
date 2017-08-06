@@ -10,6 +10,7 @@ require('source-map-support').install({
 require('longjohn');
 const winston = require('winston');
 const version = require('../package.json').version;
+
 winston.remove(winston.transports.Console);
 winston.add(winston.transports.Console, {
     'timestamp': true,
@@ -25,6 +26,7 @@ try {
 }
 global.remConfig = config;
 const Raven = require('raven');
+
 if (!remConfig.no_error_tracking) {
     Raven.config(remConfig.sentry_token, {
         release: version,
@@ -38,6 +40,7 @@ if (!remConfig.no_error_tracking) {
     winston.warn('No error tracking is used!');
 }
 let Shard = require('./Shard');
+
 const erisOptions = {
     autoreconnect: true,
     compress: true,
@@ -49,7 +52,7 @@ const erisOptions = {
     maxShards: parseInt(process.env.SHARD_COUNT),
     disableEvents: ['TYPING_START', 'TYPING_STOP', 'GUILD_MEMBER_SPEAKING', 'MESSAGE_UPDATE', 'MESSAGE_DELETE']
 };
-let shardInstance = new Shard(Object.assign({eris: erisOptions}, config), Raven);
+let shardInstance = new Shard(Object.assign({ eris: erisOptions }, config), Raven);   // eslint-disable-line no-unused-vars
 process.on('unhandledRejection', (reason, promise) => {
     if (!reason) return;
     winston.error(`Unhandled rejection: ${reason} - ${util.inspect(promise)}`);

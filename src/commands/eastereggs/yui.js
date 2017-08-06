@@ -2,8 +2,9 @@
  * Created by Julian/Wolke on 07.11.2016.
  */
 let Command = require('../../structures/command');
+
 class Yui extends Command {
-    constructor({t}) {
+    constructor({ t }) {
         super();
         this.cmd = 'yui';
         this.cat = 'eastereggs';
@@ -17,4 +18,5 @@ class Yui extends Command {
         msg.channel.createMessage('https://cdn.ram.moe/rkL9kPXNl.gif');
     }
 }
+
 module.exports = Yui;

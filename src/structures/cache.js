@@ -6,4 +6,5 @@ class Cache extends Map {
         super();
     }
 }
+
 module.exports = new Cache();

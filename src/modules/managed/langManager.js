@@ -5,11 +5,12 @@
 let Manager = require('../../structures/manager');
 const winston = require('winston');
 let fs = require('fs');
+
 Promise.promisifyAll(fs);
 let path = require('path');
-let util = require('util');
 let i18next = require('i18next');
 let Backend = require('i18next-node-fs-backend');
+
 class LangManager extends Manager {
     constructor() {
         super();
@@ -89,8 +90,9 @@ class LangManager extends Manager {
         });
         this.i18next.on('failedLoading', () => {
             console.log('failed reload!');
-        })
+        });
 
     }
 }
-module.exports = {class: LangManager, deps: [], async: true, shortcode: 'lm'};
+
+module.exports = { class: LangManager, deps: [], async: true, shortcode: 'lm' };
