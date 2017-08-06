@@ -3,6 +3,7 @@
  */
 const utils = require('./utilities');
 const winston = require('winston');
+
 class Menu {
     constructor(title, description, choices, t, msg) {
         this.t = t;
@@ -20,7 +21,7 @@ class Menu {
     }
 
     setUpListener(msg) {
-        return new Promise((res, rej) => {
+        return new Promise((res) => {
             this.sendMenuMessage(msg, this.menuText).then(menuMsg => {
                 this.menuMsg = menuMsg;
                 let collector = msg.CON.addCollector(msg.channel.id, {
@@ -55,11 +56,11 @@ class Menu {
                     } catch (e) {
                         console.error(e);
                         if (!this.sendWrongUsage) {
-                            collectorMsg.channel.createMessage('menu.invalid_response', {lngs: msg.lang});
+                            collectorMsg.channel.createMessage('menu.invalid_response', { lngs: msg.lang });
                             this.sendWrongUsage = true;
                             setTimeout(() => {
                                 this.sendWrongUsage = false;
-                            }, 500)
+                            }, 500);
                         }
                     }
                     if (parseMsg - 1 < this.choices.length) {
@@ -67,7 +68,7 @@ class Menu {
                         try {
                             this.menuMsg.delete();
                             collectorMsg.delete();
-                        } catch (e) {
+                        } catch (e) { // eslint-disable-line empty block
 
                         }
                         clearTimeout(stopTimeout);
@@ -84,11 +85,12 @@ class Menu {
             embed: {
                 title: description,
                 footer: {
-                    text: t('menu.disclaimer', {lngs: lang})
+                    text: t('menu.disclaimer', { lngs: lang })
                 },
                 description: content
             }
         };
     }
 }
+
 module.exports = Menu;

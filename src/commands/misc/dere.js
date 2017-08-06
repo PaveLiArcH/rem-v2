@@ -2,8 +2,9 @@
  * Created by Julian/Wolke on 07.11.2016.
  */
 let Command = require('../../structures/command');
+
 class Dere extends Command {
-    constructor({t}) {
+    constructor({ t }) {
         super();
         this.cmd = 'dere';
         this.cat = 'misc';
@@ -30,21 +31,21 @@ class Dere extends Command {
         if (msgSplit.length > 0) {
             let dere = this.matchDere(msgSplit);
             if (dere) {
-                msg.channel.createMessage('```' + this.t(`dere.${dere}`, {lngs: msg.lang}) + '```');
+                msg.channel.createMessage('```' + this.t(`dere.${dere}`, { lngs: msg.lang }) + '```');
             } else {
                 let table = '```';
                 for (let i = 0; i < this.deres.length; i++) {
                     table += this.deres[i] + '\n';
                 }
                 table += '```';
-                msg.channel.createMessage(this.t('dere.no-dere', {lngs: msg.lang}) + table);
+                msg.channel.createMessage(this.t('dere.no-dere', { lngs: msg.lang }) + table);
             }
         } else {
             let random = Math.floor(Math.random() * this.deres.length);
             try {
-                msg.channel.createMessage('```' + this.t(`dere.${this.deres[random]}`, {lngs: msg.lang}) + '```');
+                msg.channel.createMessage('```' + this.t(`dere.${this.deres[random]}`, { lngs: msg.lang }) + '```');
             } catch (e) {
-                msg.channel.createMessage('```' + this.t(`dere.${this.deres[0]}`, {lngs: msg.lang}) + '```');
+                msg.channel.createMessage('```' + this.t(`dere.${this.deres[0]}`, { lngs: msg.lang }) + '```');
             }
         }
     }
@@ -58,4 +59,5 @@ class Dere extends Command {
         return false;
     }
 }
+
 module.exports = Dere;

@@ -8,26 +8,31 @@ require('source-map-support').install({
 const child_process = require('child_process');
 //require the logger and modify it, to look cool
 const winston = require('winston');
+
 winston.remove(winston.transports.Console);
 winston.add(winston.transports.Console, {
     'timestamp': true,
     'colorize': true
 });
 const version = require('./../package.json').version;
+
 process.title = "Rem v" + version;
 const util = require('util');
-winston.info("Thanks for using Rem v2! You're now using the Rem client, a defunct Discord bot which provides " + 
-             "multiple functions like music, moderation and fun. Please take in mind that the client is " +
-             "provided as it is and we are no longer giving support. Run it at your own risk~ uwu");
+
+winston.info("Thanks for using Rem v2! You're now using the Rem client, a defunct Discord bot which provides " +
+    "multiple functions like music, moderation and fun. Please take in mind that the client is " +
+    "provided as it is and we are no longer giving support. Run it at your own risk~ uwu");
 const configTemplate = require('./structures/template.js');
+
 let wsWorker;
 /**
  * Use different configs based on the environment (used for easy docker run)
  */
 let loader = require('docker-config-loader');
+
 let config;
 try {
-    config = loader({secretName: 'secret_name', localPath: './config/main.json'});
+    config = loader({ secretName: 'secret_name', localPath: './config/main.json' });
 } catch (e) {
     winston.error(e);
     winston.error('Failed to require config!');
@@ -38,6 +43,7 @@ if (remConfig.use_ws) {
     wsWorker = require('./ws/worker');
 }
 require('longjohn');
+
 if (!process.env.environment && !remConfig.environment) {
     winston.warn('No environment config was found, setting the environment config to development!');
     remConfig.environment = 'development';
@@ -52,12 +58,13 @@ for (let key in configTemplate) {
             if (configTemplate[key].required) {
                 throw new Error(`The required config key ${key} is missing!`);
             } else {
-                winston.warn(`The optional config key ${key} is missing!`)
+                winston.warn(`The optional config key ${key} is missing!`);
             }
         }
     }
 }
 const Raven = require('raven');
+
 if (!remConfig.no_error_tracking) {
     Raven.config(remConfig.sentry_token, {
         release: version,
@@ -72,13 +79,13 @@ if (!remConfig.no_error_tracking) {
 }
 let client;
 if (remConfig.use_ws) {
-    let wsService = new wsWorker({connectionUrl: `ws://${remConfig.master_hostname}`});
+    let wsService = new wsWorker({ connectionUrl: `ws://${remConfig.master_hostname}` });
     wsService.on('message', (msg) => {
         if (client) {
-            client.send(JSON.stringify(msg))
+            client.send(JSON.stringify(msg));
         }
     });
-    wsService.on('ws_ready', (data) => {
+    wsService.on('ws_ready', (data) => { // eslint-disable-line no-unused-vars
         if (client) {
             // console.log(data);
         }
@@ -93,8 +100,8 @@ if (remConfig.use_ws) {
             }
             console.log(`Restarting Client for Resharding!`);
         }
-        const env = {SHARD_ID: data.sid, SHARD_COUNT: data.sc, CONFIG: JSON.stringify(config)};
-        client = child_process.fork('./shardStarter.js', {options: {env: Object.assign(process.env, env)}});
+        const env = { SHARD_ID: data.sid, SHARD_COUNT: data.sc, CONFIG: JSON.stringify(config) };
+        client = child_process.fork('./shardStarter.js', { options: { env: Object.assign(process.env, env) } });
         client.on('exit', (code, status) => {
             console.log(code, status);
             process.exit(code);
@@ -106,7 +113,7 @@ if (remConfig.use_ws) {
             } catch (e) {
                 console.error(e);
             }
-        })
+        });
 
     });
     wsService.on('shutdown_client', () => {
@@ -119,10 +126,10 @@ if (remConfig.use_ws) {
             }
             process.exit(1);
         }
-    })
+    });
 } else {
-    const env = {SHARD_ID: 0, SHARD_COUNT: 1, CONFIG: JSON.stringify(config)};
-    client = child_process.fork('./shardStarter.js', {options: {env: Object.assign(process.env, env)}});
+    const env = { SHARD_ID: 0, SHARD_COUNT: 1, CONFIG: JSON.stringify(config) };
+    client = child_process.fork('./shardStarter.js', { options: { env: Object.assign(process.env, env) } });
     client.on('exit', (code, status) => {
         console.log(code, status);
     });
@@ -145,12 +152,3 @@ process.on('unhandledRejection', (reason, promise) => {
     if (!reason) return;
     winston.error(`Unhandled rejection: ${reason} - ${util.inspect(promise)}`);
 });
-// Now look at this net
-function net() { // that I just found!
-    // When I say go,
-    // be ready to throw!
-
-    // GO!
-    throw net;
-} // Urgh, let's try somthing else
-

@@ -2,8 +2,9 @@
  * Created by Julian/Wolke on 07.11.2016.
  */
 let Command = require('../../structures/command');
+
 class Ping extends Command {
-    constructor({t}) {
+    constructor({ t }) {
         super();
         this.cmd = 'ping';
         this.cat = 'generic';
@@ -15,7 +16,7 @@ class Ping extends Command {
             long: '',
             usage: 'help.ping.usage',
             example: ''
-        }
+        };
     }
 
     run(msg) {
@@ -25,7 +26,8 @@ class Ping extends Command {
             let diff = (sendedMsg.timestamp - start);
             sendedMsg.edit(`pong \`${diff}ms\``);
             // this.emit('done');
-        }).catch(e => this.emit('error', {msg: msg, cmd: this.cmd, e: e}));
+        }).catch(e => this.emit('error', { msg: msg, cmd: this.cmd, e: e }));
     }
 }
+
 module.exports = Ping;

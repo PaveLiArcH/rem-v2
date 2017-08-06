@@ -3,9 +3,11 @@
  */
 let Manager = require('../../structures/manager');
 let userModel = require('../../DB/user');
+
 let Cache;
 let userCache;
 const winston = require('winston');
+
 if (remConfig.redis_enabled) {
     Cache = require('./../../structures/redisCache');
     winston.debug('Using Redis Cache for Users!');
@@ -15,8 +17,9 @@ if (remConfig.redis_enabled) {
     winston.debug('Using Map Cache for Users!');
 }
 let _ = require('lodash');
+
 class UserManager extends Manager {
-    constructor({mod}) {
+    constructor({ mod }) {
         super();
         this.version = '1.0.0';
         this.name = 'Usermanager';
@@ -62,7 +65,7 @@ class UserManager extends Manager {
             this.Raven.captureException(e);
             console.error(e);
         }
-        User = await userModel.findOne({id: user.id});
+        User = await userModel.findOne({ id: user.id });
         if (!User) {
             winston.debug(`Creating User ${user.id}|${user.username}#${user.discriminator} in Database!`);
             User = await this.createUser(user);
@@ -94,7 +97,7 @@ class UserManager extends Manager {
         if (!remConfig.redis_enabled) {
             this.sendCacheUpdate(user);
         }
-        return userModel.update({id: user.id}, {$set: {rep: user.rep}});
+        return userModel.update({ id: user.id }, { $set: { rep: user.rep } });
     }
 
     checkLoveCD(user) {
@@ -122,7 +125,7 @@ class UserManager extends Manager {
         if (!remConfig.redis_enabled) {
             this.sendCacheUpdate(user);
         }
-        await userModel.update({id: user.id}, {$set: {reps: reps}});
+        await userModel.update({ id: user.id }, { $set: { reps: reps } });
         return Promise.resolve(reps);
     }
 
@@ -147,24 +150,22 @@ class UserManager extends Manager {
                 serverData.level += 1;
                 serverData.xp = 0;
             }
-            return this.updateServerData(msg.dbUser, data);
+            return this.updateServerData(msg.dbUser, data);       // eslint-disable-line no-undef
         }
     }
 
     async addServerData(user, data) {
         user.servers.push(data);
-        await userCache.set(`user_${user.id}`, User);
+        await userCache.set(`user_${user.id}`, User);  // eslint-disable-line no-undef
         if (!remConfig.redis_enabled) {
             this.sendCacheUpdate(user);
         }
-        return userModel.update({id: user.id}, {$addToSet: {servers: data}});
+        return userModel.update({ id: user.id }, { $addToSet: { servers: data } });
     }
 
     async getServerData(user, guildId) {
-        let found = false;
         for (let i = 0; i < user.servers.length; i++) {
             if (user.servers[i].serverId === guildId) {
-                found = true;
                 return Promise.resolve(user.servers[i]);
             }
         }
@@ -194,7 +195,7 @@ class UserManager extends Manager {
         if (!remConfig.redis_enabled) {
             this.sendCacheUpdate(user);
         }
-        return userModel.update({id: user.id, 'servers.serverId': data.serverId}, {
+        return userModel.update({ id: user.id, 'servers.serverId': data.serverId }, {
             $set: {
                 'servers.$.cooldown': data.cooldown,
                 'servers.$.xp': data.xp,
@@ -204,7 +205,7 @@ class UserManager extends Manager {
     }
 
     sendCacheUpdate(data) {
-        this.emit('_cache_update', {type: 'user', data});
+        this.emit('_cache_update', { type: 'user', data });
     }
 
     updateCache(data) {
@@ -213,4 +214,5 @@ class UserManager extends Manager {
         }
     }
 }
-module.exports = {class: UserManager, deps: [], async: false, shortcode: 'um'};
+
+module.exports = { class: UserManager, deps: [], async: false, shortcode: 'um' };

@@ -2,8 +2,9 @@
  * Created by Julian/Wolke on 07.11.2016.
  */
 let Command = require('../../structures/command');
+
 class Randon extends Command {
-    constructor({t}) {
+    constructor({ t }) {
         super();
         this.cmd = 'randon';
         this.cat = 'eastereggs';
@@ -22,12 +23,13 @@ class Randon extends Command {
                     name: 'HcgRandon#4767',
                     icon_url: url
                 },
-                fields: [{value: '\'cause fuck you, thats why', name: 'said:'}],
-                footer: {text: 'Randon 19.11.2016'},
+                fields: [{ value: '\'cause fuck you, thats why', name: 'said:' }],
+                footer: { text: 'Randon 19.11.2016' },
                 color: 0x00ADFF
             }
         };
         msg.channel.createMessage(reply);
     }
 }
+
 module.exports = Randon;

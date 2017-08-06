@@ -2,6 +2,7 @@
  * Created by Julian/Wolke on 26.06.2016.
  */
 let mongoose = require('mongoose');
+
 let playlistSchema = mongoose.Schema({
     title: String,
     createdBy: String,
@@ -14,6 +15,6 @@ let playlistSchema = mongoose.Schema({
 });
 let playlistModel = mongoose.model('Playlists', playlistSchema);
 playlistSchema.methods.addSong = function addSong(song, cb) {
-    this.model('Playlists').update({id: this.id}, {$addToSet: {songs: song}}, cb);
+    this.model('Playlists').update({ id: this.id }, { $addToSet: { songs: song } }, cb);
 };
 module.exports = playlistModel;

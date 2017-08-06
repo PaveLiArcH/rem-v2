@@ -5,9 +5,10 @@ const Stream = require('stream');
 const https = require('https');
 const http = require('http');
 const URL = require('url');
+
 class WolkeStream {
-    constructor(url, options) {
-        this.output = new Stream.PassThrough({highWaterMark: 32768});
+    constructor(url, options) {          // eslint-disable-line no-unused-vars
+        this.output = new Stream.PassThrough({ highWaterMark: 32768 });
         this.total = 0;
         this.done = 0;
         this.url = url;
@@ -88,7 +89,8 @@ class WolkeStream {
                 this.output.end();
             }
         });
-        res.pipe(this.output, {end: false});
+        res.pipe(this.output, { end: false });
     }
 }
+
 module.exports = WolkeStream;

@@ -3,10 +3,10 @@
  */
 let Command = require('../../structures/command');
 let minimist = require('minimist');
-let winston = require('winston');
 let async = require('async');
+
 class RemoveMessages extends Command {
-    constructor ({t}) {
+    constructor({ t }) {
         super();
         this.cmd = 'rm';
         this.cat = 'moderation';
@@ -18,27 +18,27 @@ class RemoveMessages extends Command {
         this.aliases = ['purge', 'prune'];
     }
 
-    run (msg) {
+    run(msg) {
         let messageSplit = msg.content.split(' ').splice(1);
-        let args = minimist(messageSplit, {boolean: ['b', 'r', 'c', 'd', 'u', 'p'], string: ['i']});
+        let args = minimist(messageSplit, { boolean: ['b', 'r', 'c', 'd', 'u', 'p'], string: ['i'] });
         this.msg = msg;
         let limit = 0;
         try {
             limit = parseInt(args._[0]);
         } catch (e) {
-
+            limit = 0;
         }
         args._.splice(1);
         // console.log(args);
         // console.log(msg);
         if (limit > 1 && !isNaN(limit)) {
             this.getMessages(msg, limit, (err, msgs) => {
-                if (err) return msg.channel.createMessage(this.t(err, {lngs: msg.lang}));
+                if (err) return msg.channel.createMessage(this.t(err, { lngs: msg.lang }));
                 this.filterMessages(msgs, args, (err, msgs) => {
-                    if (err) return msg.channel.createMessage(this.t('rm.error', {lngs: msg.lang}));
+                    if (err) return msg.channel.createMessage(this.t('rm.error', { lngs: msg.lang }));
                     if (msgs.length > 0) {
                         this.deleteMessages(msgs, (err) => {
-                            if (err) return msg.channel.createMessage(this.t('rm.error', {lngs: msg.lang}));
+                            if (err) return msg.channel.createMessage(this.t('rm.error', { lngs: msg.lang }));
                             msg.channel.createMessage(this.t('rm.success', {
                                 number: msgs.length,
                                 lngs: msg.lang
@@ -50,16 +50,16 @@ class RemoveMessages extends Command {
                             });
                         });
                     } else {
-                        msg.channel.createMessage(this.t('rm.nothing-found', {lngs: msg.lang}));
+                        msg.channel.createMessage(this.t('rm.nothing-found', { lngs: msg.lang }));
                     }
                 });
             });
         } else {
-            msg.channel.createMessage(this.t('rm.no-limit', {lngs: msg.lang}));
+            msg.channel.createMessage(this.t('rm.no-limit', { lngs: msg.lang }));
         }
     }
 
-    filterMessages (msgs, args, cb) {
+    filterMessages(msgs, args, cb) {
         let filtered = [];
         async.each(msgs, (msg, cb) => {
             let done = false;
@@ -131,7 +131,7 @@ class RemoveMessages extends Command {
         });
     }
 
-    getMessages (msg, limit, cb) {
+    getMessages(msg, limit, cb) {
         if (limit < 2 || limit > 100) {
             return cb('rm.over-limit');
         }
@@ -143,7 +143,7 @@ class RemoveMessages extends Command {
         });
     }
 
-    deleteMessages (msgs, cb) {
+    deleteMessages(msgs, cb) {
         rem.deleteMessages(this.msg.channel.id, msgs).then(() => {
             cb();
         }).catch(err => {
@@ -152,4 +152,5 @@ class RemoveMessages extends Command {
         });
     }
 }
+
 module.exports = RemoveMessages;

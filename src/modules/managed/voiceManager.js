@@ -8,8 +8,9 @@ const shuffle = require('knuth-shuffle').knuthShuffle;
 const utils = require('../../structures/utilities');
 let Radio = require('../../structures/radio');
 let SongTypes = require('../../structures/constants').SONG_TYPES;
+
 class VoiceManager {
-    constructor({mod}) {
+    constructor({ mod }) {
         this.players = {};
         this.redis = mod.getMod('redis');
         this.sm = mod.getMod('sm');
@@ -71,7 +72,7 @@ class VoiceManager {
             await this.writeQueueToCache(msg.channel.guild.id, queue);
             return Promise.resolve(playlist);
         } else {
-            throw new TranslatableError({message: 'This Playlist is not supported!', t: 'apq.unsupported'});
+            throw new TranslatableError({ message: 'This Playlist is not supported!', t: 'apq.unsupported' });
         }
     }
 
@@ -87,7 +88,7 @@ class VoiceManager {
                     player.setQueueSongs(queue.songs);
                     await this.writeQueueToCache(msg.channel.guild.id, queue);
                     await player.nextSong();
-                    return Promise.resolve({t: 'skip.all'});
+                    return Promise.resolve({ t: 'skip.all' });
                 } else {
                     let songsToSkip = 0;
                     try {
@@ -117,19 +118,19 @@ class VoiceManager {
                     queue.songs.unshift(current);
                     player.setQueueSongs(queue.songs);
                     await this.writeQueueToCache(msg.channel.guild.id, queue);
-                    let song = await player.nextSong();
-                    return Promise.resolve({t: 'skip.some', amount: songsToSkip});
+                    let song = await player.nextSong();   // eslint-disable-line no-unused-vars
+                    return Promise.resolve({ t: 'skip.some', amount: songsToSkip });
                 }
             } else {
                 let song = await player.nextSong();
                 if (song) {
-                    return Promise.resolve({title: song.title, t: 'skip.success'});
+                    return Promise.resolve({ title: song.title, t: 'skip.success' });
                 } else {
-                    throw new TranslatableError({t: 'generic.no-song-playing'});
+                    throw new TranslatableError({ t: 'generic.no-song-playing' });
                 }
             }
         } else {
-            throw new TranslatableError({message: 'There was no player created yet.', t: 'generic.no-song-in-queue'});
+            throw new TranslatableError({ message: 'There was no player created yet.', t: 'generic.no-song-in-queue' });
         }
     }
 
@@ -144,7 +145,7 @@ class VoiceManager {
                 queue.songs = [current];
                 player.setQueueSongs(queue.songs);
                 await this.writeQueueToCache(msg.channel.guild.id, queue);
-                return Promise.resolve({t: 'qra.success', number: length});
+                return Promise.resolve({ t: 'qra.success', number: length });
             } else {
                 let range = args.split('-');
                 let range2 = args.split(',');
@@ -155,7 +156,7 @@ class VoiceManager {
                         start = parseInt(range[0]);
                         end = parseInt(range[1]);
                     } catch (e) {
-                        throw new TranslatableError({err: e, t: 'generic.nan'});
+                        throw new TranslatableError({ err: e, t: 'generic.nan' });
                     }
                     if (start >= 1 && start <= queue.songs.length && end >= 2 && end <= queue.songs.length) {
                         let counter = start > end ? end : start;
@@ -165,9 +166,9 @@ class VoiceManager {
                         }
                         player.setQueueSongs(queue.songs);
                         await this.writeQueueToCache(msg.channel.guild.id, queue);
-                        return Promise.resolve({t: 'qra.success', number: secondCounter + 1 - counter});
+                        return Promise.resolve({ t: 'qra.success', number: secondCounter + 1 - counter });
                     } else {
-                        throw new TranslatableError({t: 'generic.nan'});
+                        throw new TranslatableError({ t: 'generic.nan' });
                     }
                 } else if (range2.length > 1) {
                     let ids = [];
@@ -176,12 +177,12 @@ class VoiceManager {
                         try {
                             id = parseInt(range2[i]);
                         } catch (e) {
-                            throw new TranslatableError({err: e, t: 'generic.nan'});
+                            throw new TranslatableError({ err: e, t: 'generic.nan' });
                         }
                         if (id <= queue.songs.length && id >= 1) {
                             ids.push(id);
                         } else {
-                            throw new TranslatableError({err: e, t: 'generic.nan'});
+                            throw new TranslatableError({ err: e, t: 'generic.nan' });  // eslint-disable-line no-undef
                         }
                     }
                     ids.sort((a, b) => {
@@ -190,19 +191,19 @@ class VoiceManager {
                     for (let i = 0; i < ids.length; i++) {
                         queue.songs.splice(ids[i] - 1, 1);
                     }
-                    return ({t: 'qra.success', number: ids.length});
+                    return ({ t: 'qra.success', number: ids.length });
                 } else {
                     let songIndex = 0;
                     try {
                         songIndex = parseInt(args);
                     } catch (e) {
-                        throw new TranslatableError({err: e, t: 'generic.nan'});
+                        throw new TranslatableError({ err: e, t: 'generic.nan' });
                     }
                     // console.log(songIndex);
                     // console.log(queue.songs.length);
                     if (isNaN(songIndex) || songIndex <= 1 || songIndex > queue.songs.length) {
                         // console.log(songIndex);
-                        throw new TranslatableError({t: 'generic.nan'});
+                        throw new TranslatableError({ t: 'generic.nan' });
                     }
                     let songToSkip = queue.songs[songIndex - 1];
                     if (songIndex > -1) {
@@ -210,11 +211,11 @@ class VoiceManager {
                     }
                     player.setQueueSongs(queue.songs);
                     await this.writeQueueToCache(msg.channel.guild.id, queue);
-                    return Promise.resolve({t: 'qra.removed', title: songToSkip.title});
+                    return Promise.resolve({ t: 'qra.removed', title: songToSkip.title });
                 }
             }
         } else {
-            throw new TranslatableError({t: 'generic.no-song-in-queue'});
+            throw new TranslatableError({ t: 'generic.no-song-in-queue' });
         }
     }
 
@@ -286,7 +287,7 @@ class VoiceManager {
     async shuffle(msg) {
         let conn = rem.voiceConnections.get(msg.channel.guild.id);
         if (!conn) {
-            throw new TranslatableError({message: 'Rem is not connected to a voice channel.', t: 'generic.no-voice'});
+            throw new TranslatableError({ message: 'Rem is not connected to a voice channel.', t: 'generic.no-voice' });
         }
         let player = this.getPlayer(msg.channel.guild.id);
         if (player) {
@@ -303,9 +304,9 @@ class VoiceManager {
             player.setQueueSongs(shuffledQueue);
             queue.songs = shuffledQueue;
             await this.writeQueueToCache(msg.channel.guild.id, queue);
-            return Promise.resolve({t: 'shuffle.success'});
+            return Promise.resolve({ t: 'shuffle.success' });
         } else {
-            throw new TranslatableError({err: 'There is no player object atm.', t: 'generic.no-voice'});
+            throw new TranslatableError({ err: 'There is no player object atm.', t: 'generic.no-voice' });
         }
 
     }
@@ -313,7 +314,7 @@ class VoiceManager {
     async resume(msg) {
         let conn = rem.voiceConnections.get(msg.channel.guild.id);
         if (!conn) {
-            throw new TranslatableError({message: 'Rem is not connected to a voice channel.', t: 'generic.no-voice'});
+            throw new TranslatableError({ message: 'Rem is not connected to a voice channel.', t: 'generic.no-voice' });
         }
         try {
             this.players[msg.channel.guild.id].resume();
@@ -330,7 +331,7 @@ class VoiceManager {
     async pause(msg) {
         let conn = rem.voiceConnections.get(msg.channel.guild.id);
         if (!conn) {
-            throw new TranslatableError({message: 'Rem is not connected to a voice channel.', t: 'generic.no-voice'});
+            throw new TranslatableError({ message: 'Rem is not connected to a voice channel.', t: 'generic.no-voice' });
         }
         try {
             this.players[msg.channel.guild.id].pause();
@@ -353,14 +354,14 @@ class VoiceManager {
             player.updateConnection(connection);
             player.autoplay();
             player.syncInterval = setInterval(() => {
-                this.writeQueueToCache(msg.channel.guild.id, player.getQueue()).catch()
+                this.writeQueueToCache(msg.channel.guild.id, player.getQueue()).catch();
             }, 30 * 1000);
             return player;
         } else {
             player = new AudioPlayer(msg, connection, queue);
             this.players[msg.channel.guild.id] = player;
             player.syncInterval = setInterval(() => {
-                this.writeQueueToCache(msg.channel.guild.id, player.getQueue()).catch()
+                this.writeQueueToCache(msg.channel.guild.id, player.getQueue()).catch();
             }, 30 * 1000);
             return player;
         }
@@ -372,7 +373,7 @@ class VoiceManager {
             // console.log(rem.voiceConnections.filter((vc) => vc.playing).length);
             return rem.voiceConnections.filter((vc) => vc.playing).length;
         }
-        return rem.voiceConnections.size
+        return rem.voiceConnections.size;
     }
 
     async loadQueueFromCache(guildId) {
@@ -390,7 +391,7 @@ class VoiceManager {
                 }
             });
             return queue;
-        } catch (e) {
+        } catch (e) {  // eslint-disable-line empty-block
 
         }
         return Promise.resolve();
@@ -431,4 +432,5 @@ class VoiceManager {
         }
     }
 }
-module.exports = {class: VoiceManager, deps: ['sm'], async: false, shortcode: 'vm'};
+
+module.exports = { class: VoiceManager, deps: ['sm'], async: false, shortcode: 'vm' };

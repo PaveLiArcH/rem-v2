@@ -2,8 +2,9 @@
  * Created by Julian/Wolke on 18.01.2017.
  */
 let Command = require('../../structures/command');
+
 class getPermNode extends Command {
-    constructor({t}) {
+    constructor({ t }) {
         super();
         this.cmd = 'getNode';
         this.cat = 'permission';
@@ -31,14 +32,15 @@ class getPermNode extends Command {
                         category: cmd.cat
                     }));
                 } else {
-                    msg.channel.createMessage(this.t('get-node.not-found', {lngs: msg.lang}));
+                    msg.channel.createMessage(this.t('get-node.not-found', { lngs: msg.lang }));
                 }
             } else {
-                msg.channel.createMessage(this.t('get-node.not-found', {lngs: msg.lang}));
+                msg.channel.createMessage(this.t('get-node.not-found', { lngs: msg.lang }));
             }
         } else {
-            msg.channel.createMessage(this.t('get-node.no-args', {lngs: msg.lang}));
+            msg.channel.createMessage(this.t('get-node.no-args', { lngs: msg.lang }));
         }
     }
 }
+
 module.exports = getPermNode;

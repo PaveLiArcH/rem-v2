@@ -53,12 +53,12 @@ const searchUser = (memberCollection, username) => {
 const searchChannel = (channelCollection, channelName) => {
     return channelCollection.filter((m => {
         return m.name.toLocaleLowerCase().indexOf(channelName.toLocaleLowerCase()) > -1;
-    }))
+    }));
 };
 const searchRoles = (roleCollection, roleName) => {
     return roleCollection.filter(r => {
         return r.name.toLocaleLowerCase().indexOf(roleName.toLocaleLowerCase()) > -1;
-    })
+    });
 };
 /**
  * Gets a list of channels with their names from an array of channel objects
@@ -120,7 +120,7 @@ const getHighestRolePosition = (member, roles) => {
         }
     });
     resolvedRoles = resolvedRoles.sort((a, b) => {
-        return b.position - a.position
+        return b.position - a.position;
     });
     if (resolvedRoles.length > 0) {
         return resolvedRoles[0].position;
@@ -134,7 +134,7 @@ const getHighestRolePosition = (member, roles) => {
  * @return {string}
  */
 const getMemberNameDiscrim = (member) => {
-    return `${member.user.username}#${member.user.discriminator}`
+    return `${member.user.username}#${member.user.discriminator}`;
 };
 module.exports = {
     searchUser,

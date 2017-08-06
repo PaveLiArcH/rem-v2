@@ -2,8 +2,9 @@
  * Created by Julian/Wolke on 18.01.2017.
  */
 let Command = require('../../structures/command');
+
 class ResetPermissions extends Command {
-    constructor({t, mod}) {
+    constructor({ t, mod }) {
         super();
         this.cmd = 'resetPerms';
         this.cat = 'permission';
@@ -14,7 +15,7 @@ class ResetPermissions extends Command {
     }
 
     async run(msg) {
-        await msg.channel.createMessage(this.t('reset-perms.confirmation', {lngs: msg.lang}));
+        await msg.channel.createMessage(this.t('reset-perms.confirmation', { lngs: msg.lang }));
         let collector = msg.CON.addCollector(msg.channel.id, {
             filter: (conMsg) => {
                 return (msg.author.id === conMsg.author.id);
@@ -28,17 +29,17 @@ class ResetPermissions extends Command {
                         await this.p.resetDbPerm(msg.channel.guild.id);
                     }
                     catch (e) {
-                        return msg.channel.createMessage(this.t(e.t, {lngs: msg.lang}));
+                        return msg.channel.createMessage(this.t(e.t, { lngs: msg.lang }));
                     }
-                    msg.channel.createMessage(this.t('reset-perms.success', {lngs: msg.lang}));
+                    msg.channel.createMessage(this.t('reset-perms.success', { lngs: msg.lang }));
                     return;
                 }
                 case 'no': {
-                    msg.channel.createMessage(this.t('generic.cancelled-command', {lngs: msg.lang})).then().catch(err => console.error(err));
+                    msg.channel.createMessage(this.t('generic.cancelled-command', { lngs: msg.lang })).then().catch(err => console.error(err));
                     return;
                 }
                 default: {
-                    msg.channel.createMessage(this.t('generic.cancelled-command', {lngs: msg.lang}));
+                    msg.channel.createMessage(this.t('generic.cancelled-command', { lngs: msg.lang }));
                     return;
                 }
             }
@@ -46,4 +47,5 @@ class ResetPermissions extends Command {
 
     }
 }
+
 module.exports = ResetPermissions;

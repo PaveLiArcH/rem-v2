@@ -1,10 +1,10 @@
 let fs = require('fs');
-let path = require('path');
 let unzip = require('unzip2');
+
 let config;
 try {
     if (process.env.secret_name) {
-        config = require(`/run/secrets/${process.env.secret_name}`);
+        config = require(`/run/secrets/${process.env.secret_name}`);       // eslint-disable-line import/no-dynamic-require
         console.info(`Using docker secrets!`);
     } else {
         config = require('../../../config/main.json');
@@ -17,26 +17,28 @@ try {
     process.exit(1);
 }
 const osu = require('node-osu');
+
 let osuApi = new osu.Api(config.osu_token);
 let request = require('request');
-let shortid = require('shortid');
-request = request.defaults({jar: true});
+
+request = request.defaults({ jar: true });
 process.on('message', (ev) => {
     downloadOsuMap(ev.map).then(map => {
         unpackOsuMap(map).then(map => {
-            process.send({type: 'result', map: map});
+            process.send({ type: 'result', map: map });
         }).catch(err => {
             console.log(err);
-            process.send({type: 'err', err: err});
+            process.send({ type: 'err', err: err });
         });
     }).catch(err => {
         console.log(err);
-        process.send({type: 'err', err: err});
+        process.send({ type: 'err', err: err });
     });
 });
+
 function downloadOsuMap(url) {
     return new Promise((resolve, reject) => {
-        let setRegex = /.*http(s|):\/\/osu.ppy.sh\/(s|b)\/([0-9]*)((\?|\&)m=[0-9]|)/;
+        let setRegex = /.*http(s|):\/\/osu.ppy.sh\/(s|b)\/([0-9]*)((\?|\&)m=[0-9]|)/;  // eslint-disable-line no-useless-escape
         let notAvailableRegex = /This download is no longer available/i;
         let map = url;
         let mapType = JSON.parse('{"' + map.replace(setRegex, '$2') + '": ' + map.replace(setRegex, '$3') + '}');
@@ -50,9 +52,9 @@ function downloadOsuMap(url) {
                         password: config.osu_password,
                         username: config.osu_username
                     }
-                }, (err, res, body) => {
+                }, (err) => {
                     if (err) reject(err);
-                    let url = `http://osu.ppy.sh/d/${beatmap.beatmapSetId}n`;//No video version
+                    let url = `http://osu.ppy.sh/d/${beatmap.beatmapSetId}n`;   // No video version
                     let stream = fs.createWriteStream(`../temp/${beatmap.beatmapSetId}.zip`);
                     request.get(url, (err, res, body) => {
                         if (err) {
@@ -73,6 +75,7 @@ function downloadOsuMap(url) {
         }).catch(reject);
     });
 }
+
 function unpackOsuMap(map) {
     return new Promise((resolve, reject) => {
         fs.createReadStream(map.path)

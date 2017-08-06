@@ -4,6 +4,7 @@
 let Manager = require('../../structures/manager');
 let statModel = require('../../DB/stat');
 let winston = require('winston');
+
 class StatisticManager extends Manager {
     constructor() {
         super();
@@ -25,4 +26,5 @@ class StatisticManager extends Manager {
         });
     }
 }
-module.exports = {class: StatisticManager, deps: [], async: false, shortcode: 'stm'};
+
+module.exports = { class: StatisticManager, deps: [], async: false, shortcode: 'stm' };

@@ -6,8 +6,9 @@ let winston = require('winston');
 let moment = require('moment');
 const utils = require('../../structures/utilities');
 const searcher = require('../../structures/searcher');
+
 class Love extends Command {
-    constructor({t, mod}) {
+    constructor({ t, mod }) {
         super();
         this.cmd = 'love';
         this.cat = 'misc';
@@ -25,7 +26,7 @@ class Love extends Command {
             let targetMember;
             if (msg.mentions.length > 0) {
                 if (msg.mentions[0].id === msg.author.id) {
-                    return msg.channel.createMessage(this.t('love.self', {lngs: msg.lang}));
+                    return msg.channel.createMessage(this.t('love.self', { lngs: msg.lang }));
                 }
                 targetMember = msg.mentions[0];
             } else if (msgSplit.length > 0) {
@@ -33,16 +34,16 @@ class Love extends Command {
                 let users = utils.searchUser(msg.channel.guild.members, msgSplitFilter.join(' '));
                 let pick = await searcher.userSearchMenu(msg, msgSplitFilter, this.t);
                 if (pick === -1) {
-                    return msg.channel.createMessage(this.t('generic.cancelled-command', {lngs: msg.lang}));
+                    return msg.channel.createMessage(this.t('generic.cancelled-command', { lngs: msg.lang }));
                 }
                 if (pick === -2) {
-                    return msg.channel.createMessage(this.t('search.no-results', {lngs: msg.lang}));
+                    return msg.channel.createMessage(this.t('search.no-results', { lngs: msg.lang }));
                 }
                 if (pick > -1) {
                     targetMember = users[pick];
                 }
             } else {
-                return msg.channel.createMessage(this.t('generic.mention', {lngs: msg.lang}));
+                return msg.channel.createMessage(this.t('generic.mention', { lngs: msg.lang }));
             }
             let inc = this.checkMsg(msgSplit) ? 1 : -1;
             let target = targetMember;
@@ -67,16 +68,16 @@ class Love extends Command {
                     });
                 }
                 if (reps.length === 2) {
-                    reply += this.t('love.next', {lngs: msg.lang, time: time.to(lowest)});
+                    reply += this.t('love.next', { lngs: msg.lang, time: time.to(lowest) });
                 }
                 msg.channel.createMessage(reply);
             } catch (e) {
                 winston.error(e);
-                return msg.channel.createMessage(this.t('generic.error', {lngs: msg.lang}));
+                return msg.channel.createMessage(this.t('generic.error', { lngs: msg.lang }));
             }
         } else {
             let lowest = Math.min(...msg.dbUser.reps);
-            msg.channel.createMessage(this.t('love.error-cd', {lngs: msg.lang, time: time.to(lowest)}));
+            msg.channel.createMessage(this.t('love.error-cd', { lngs: msg.lang, time: time.to(lowest) }));
         }
     }
 
@@ -90,4 +91,5 @@ class Love extends Command {
     }
 
 }
+
 module.exports = Love;

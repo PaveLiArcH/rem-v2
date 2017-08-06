@@ -2,8 +2,9 @@
  * Created by Julian/Wolke on 07.11.2016.
  */
 let Command = require('../../structures/command');
+
 class Magic extends Command {
-    constructor({t}) {
+    constructor({ t }) {
         super();
         this.cmd = 'eggplant';
         this.cat = 'eastereggs';
@@ -17,4 +18,5 @@ class Magic extends Command {
         msg.channel.createMessage(':eggplant: ');
     }
 }
+
 module.exports = Magic;

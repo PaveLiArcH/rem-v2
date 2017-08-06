@@ -2,8 +2,9 @@
  * Created by Julian/Wolke on 07.11.2016.
  */
 let Command = require('../../structures/command');
+
 class SetLanguage extends Command {
-    constructor({t, mod}) {
+    constructor({ t, mod }) {
         super();
         this.cmd = 'set';
         this.cat = 'moderation';
@@ -33,10 +34,12 @@ class SetLanguage extends Command {
                     return;
                 }
             }
-        } else {
-
         }
+        /* else {
+
+               }*/
     }
 
 }
+
 module.exports = SetLanguage;

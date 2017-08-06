@@ -5,11 +5,13 @@ let winston = require('winston');
 let async = require('async');
 let readDir = require('recursive-readdir');
 let path = require('path');
+
 let ModPath = path.join(__dirname, './managed');
 /**
  * This is the ModuleManager Class, it loads all modules within managed/ and instantiates them and their dependencies
  */
 let start;
+
 class ModuleManager {
     constructor() {
         this.mods = {};
@@ -41,7 +43,7 @@ class ModuleManager {
                 for (let file of files) {
                     if (file.endsWith('.js')) {
                         try {
-                            let mod = require(file);
+                            let mod = require(file);   // eslint-disable-line import/no-dynamic-require
                             that.loadRawMod(mod);
                         } catch (e) {
                             console.error(`Error while requiring mod ${file}`);
@@ -76,8 +78,8 @@ class ModuleManager {
     load(mod) {
         // winston.info(`Loading mod ${mod.shortcode}`);
         let that = this;
-        let protoDep = {mod: this};
-        return new Promise(function (resolve, reject) {
+        let protoDep = { mod: this };
+        return new Promise(function (resolve) {
             if (that.mods[mod.shortcode]) {
                 // winston.info(`Mod ${mod.shortcode} is already loaded.`);
                 resolve(that.mods[mod.shortcode]);
@@ -159,4 +161,5 @@ class ModuleManager {
         return this.mods[mod];
     }
 }
+
 module.exports = ModuleManager;

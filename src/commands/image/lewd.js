@@ -3,8 +3,9 @@
  */
 
 let RRACommand = require('../../structures/rraCommand');
+
 class LewdImage extends RRACommand {
-    constructor({t}) {
+    constructor({ t }) {
         super();
         this.cmd = 'lewd';
         this.cat = 'image';
@@ -13,4 +14,5 @@ class LewdImage extends RRACommand {
         this.accessLevel = 0;
     }
 }
+
 module.exports = LewdImage;

@@ -4,8 +4,9 @@
 let Command = require('../../structures/command');
 let msgModel = require('../../DB/message');
 let winston = require('winston');
+
 class SayDelete extends Command {
-    constructor({t}) {
+    constructor({ t }) {
         super();
         this.cmd = 'sayd';
         this.cat = 'fun';
@@ -16,7 +17,7 @@ class SayDelete extends Command {
 
     run(msg) {
         let content = msg.content.substr(msg.prefix.length + this.cmd.length).trim();
-        if (content === '') return msg.channel.createMessage(this.t('generic.empty-say', {lngs: msg.lang}));
+        if (content === '') return msg.channel.createMessage(this.t('generic.empty-say', { lngs: msg.lang }));
         msg.trueContent = content;
         msg.channel.createMessage('\u200B' + content).then(newMsg => {
             msg.id = newMsg.id;
@@ -42,4 +43,5 @@ class SayDelete extends Command {
         });
     }
 }
+
 module.exports = SayDelete;

@@ -3,6 +3,7 @@
  */
 let Command = require('../../structures/command');
 let AsciiTable = require('ascii-table');
+
 /**
  * The vote skip command
  * @extends Command
@@ -14,7 +15,7 @@ class ForceSkip extends Command {
      * @param {Function} t - the translation module
      * @param {Object} v - the voice manager
      */
-    constructor({t, v}) {
+    constructor({ t, v }) {
         super();
         this.cmd = 'skip';
         this.cat = 'music';
@@ -29,7 +30,7 @@ class ForceSkip extends Command {
 
     run(msg) {
         if (typeof(this.inprogress[msg.channel.id]) !== 'undefined') {
-            return msg.channel.createMessage(this.t('vskip.in-prog', {lngs: msg.lang, prefix: msg.prefix}));
+            return msg.channel.createMessage(this.t('vskip.in-prog', { lngs: msg.lang, prefix: msg.prefix }));
         }
         if (msg.member.voiceState.channelID && rem.voiceConnections.get(msg.channel.guild.id) && msg.member.voiceState.channelID === rem.voiceConnections.get(msg.channel.guild.id).channelID) {
             let channelID = msg.member.voiceState.channelID;
@@ -49,17 +50,17 @@ class ForceSkip extends Command {
     async skip(msg) {
         try {
             let res = await this.v.forceSkip(msg);
-            msg.channel.createMessage(this.t(res.t, {lngs: msg.lang, title: res.title, amount: res.amount}));
+            msg.channel.createMessage(this.t(res.t, { lngs: msg.lang, title: res.title, amount: res.amount }));
         } catch (err) {
             console.error(err);
-            msg.channel.createMessage(this.t(err.t ? err.t : 'generic.error', {lngs: msg.lang}));
+            msg.channel.createMessage(this.t(err.t ? err.t : 'generic.error', { lngs: msg.lang }));
         }
     }
 
     startVoteskip(msg, channel) {
-        this.inprogress[msg.channel.id] = {inprogress: true, id: msg.channel.id};
+        this.inprogress[msg.channel.id] = { inprogress: true, id: msg.channel.id };
         let size = channel.voiceMembers.size - 1;
-        let voted = [{id: msg.author.id, name: msg.member.nick ? msg.member.nick : msg.author.username}];
+        let voted = [{ id: msg.author.id, name: msg.member.nick ? msg.member.nick : msg.author.username }];
         let table = new AsciiTable();
         table.addRow(msg.author.username + '#' + msg.author.discriminator);
         let percentage = voted.length / size * 100;
@@ -77,7 +78,7 @@ class ForceSkip extends Command {
                     voteMsg.delete();
                     delete this.inprogress[msg.channel.id];
                     this.v.removeAllListeners();
-                } catch (e) {
+                } catch (e) {               // eslint-disable-line empty-block
 
                 }
             }, 1000 * 60);
@@ -90,7 +91,10 @@ class ForceSkip extends Command {
                 } else if (msg.content === `${this.msg.prefix}yes`) {
                     if (this.checkVoted(msg, voted)) {
                         size = channel.voiceMembers.size;
-                        voted.push({id: msg.author.id, name: msg.member.nick ? msg.member.nick : msg.author.username});
+                        voted.push({
+                            id: msg.author.id,
+                            name: msg.member.nick ? msg.member.nick : msg.author.username
+                        });
                         table.addRow(msg.author.username + '#' + msg.author.discriminator);
                         percentage = voted.length / size * 100;
                         if (percentage === 50 || percentage > 50) {
@@ -108,7 +112,7 @@ class ForceSkip extends Command {
                             }));
                         }
                     } else {
-                        msg.channel.createMessage(this.t('vskip.dup', {lngs: msg.lang}));
+                        msg.channel.createMessage(this.t('vskip.dup', { lngs: msg.lang }));
                     }
 
                 }
@@ -127,4 +131,5 @@ class ForceSkip extends Command {
         return true;
     }
 }
+
 module.exports = ForceSkip;

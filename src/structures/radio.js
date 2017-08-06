@@ -7,7 +7,7 @@ let icy = require('icy');
 let devnull = require('dev-null');
 
 class Radio extends Song {
-    constructor (options) {
+    constructor(options) {
         super(options);
         this.options = options;
         this.ws = null;
@@ -24,11 +24,11 @@ class Radio extends Song {
         };
     }
 
-    updateTitle (title) {
+    updateTitle(title) {
         this.title = title;
     }
 
-    connect () {
+    connect() {
         this.ended = false;
         if (this.options.wsUrl) {
             console.error('ws-ing');
@@ -37,7 +37,7 @@ class Radio extends Song {
                 this.connectionAttempts = 1;
             });
             this.ws.on('message', (msg, flags) => {
-                this.onMessage(msg, flags)
+                this.onMessage(msg, flags);
             });
             this.ws.on('error', (err) => this.onError(err));
             this.ws.on('close', (code, number) => this.onDisconnect(code, number));
@@ -65,13 +65,13 @@ class Radio extends Song {
     }
 
 
-    onError (err) {
+    onError(err) {
         console.error(err);
         console.log(`ws error!`);
         // this.reconnect();
     }
 
-    end () {
+    end() {
         this.ended = true;
         try {
             if (this.ws) {
@@ -85,14 +85,14 @@ class Radio extends Song {
                     console.error(`stopped ${this.options.streamUrl}`);
                 }
             }
-        } catch (e) {
+        } catch (e) { // eslint-disable-line empty-block
 
         }
         this.ws = null;
         this.icyRequest = null;
     }
 
-    onDisconnect (code, number) {
+    onDisconnect(code, number) {
         console.error(code);
         console.error(number);
         if (!this.ended) {
@@ -100,7 +100,7 @@ class Radio extends Song {
         }
     }
 
-    onMessage (msg, flags) {
+    onMessage(msg, flags) { // eslint-disable-line no-unused-vars
         try {
             let actualMessage = JSON.parse(msg);
             if (actualMessage.song_name && actualMessage.artist_name) {
@@ -113,4 +113,5 @@ class Radio extends Song {
         }
     }
 }
+
 module.exports = Radio;

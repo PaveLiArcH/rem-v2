@@ -2,9 +2,10 @@
  * Created by Julian/Wolke on 07.11.2016.
  */
 let Command = require('../../structures/command');
-let winston = require('winston');
 let Selector = require('../../structures/selector');
+
 let track_error = !remConfig.no_error_tracking;
+
 /**
  * The play command
  * plays a song duh.
@@ -18,7 +19,7 @@ class Play extends Command {
      * @param {Object} v - the voice manager
      * @param mod The module manager
      */
-    constructor({t, v, mod}) {
+    constructor({ t, v, mod }) {
         super();
         this.cmd = 'play';
         this.cat = 'music';
@@ -31,7 +32,7 @@ class Play extends Command {
 
     async run(msg) {
         let msgSplit = msg.content.split(' ').splice(1);
-        if (msgSplit.length === 0) return msg.channel.createMessage(this.t('qa.empty-search', {lngs: msg.lang}));
+        if (msgSplit.length === 0) return msg.channel.createMessage(this.t('qa.empty-search', { lngs: msg.lang }));
         let uwu = this.checkNext(msgSplit);
         let next = uwu.next;
         msgSplit = uwu.msgSplit;
@@ -54,7 +55,7 @@ class Play extends Command {
         } catch (err) {
             console.error(err);
             if (err instanceof TranslatableError) {
-                msg.channel.createMessage(this.t(err instanceof TranslatableError ? err.t : 'generic.error', {lngs: msg.lang}));
+                msg.channel.createMessage(this.t(err instanceof TranslatableError ? err.t : 'generic.error', { lngs: msg.lang }));
             } else {
                 if (track_error) {
                     this.r.captureException(err, {
@@ -66,7 +67,7 @@ class Play extends Command {
                         }
                     });
                 }
-                msg.channel.createMessage(this.t('generic.error', {lngs: msg.lang}));
+                msg.channel.createMessage(this.t('generic.error', { lngs: msg.lang }));
             }
         }
     }
@@ -78,13 +79,13 @@ class Play extends Command {
             msgSplit.splice(index, 1);
             next = true;
         }
-        return {next, msgSplit};
+        return { next, msgSplit };
     }
 
     searchResult(msg, results, next) {
-        let selector = new Selector(msg, results, this.t, (err, number) => {
+        let selector = new Selector(msg, results, this.t, (err, number) => {        // eslint-disable-line no-unused-vars
             if (err) {
-                return msg.channel.createMessage(this.t(err, {lngs: msg.lang}));
+                return msg.channel.createMessage(this.t(err, { lngs: msg.lang }));
             }
             msg.content = `!w.play https://youtube.com/watch?v=${results[number - 1].id}`;
             if (next) {
@@ -94,4 +95,5 @@ class Play extends Command {
         });
     }
 }
+
 module.exports = Play;

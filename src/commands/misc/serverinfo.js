@@ -3,9 +3,9 @@
  */
 let Command = require('../../structures/command');
 let moment = require('moment');
-let winston = require('winston');
+
 class ServerInfo extends Command {
-    constructor({t, mod}) {
+    constructor({ t /* ,mod */ }) {
         super();
         this.cmd = 'sinfo';
         this.cat = 'misc';
@@ -24,7 +24,6 @@ class ServerInfo extends Command {
          * @type {string}
          */
 
-            // let avatar = msg.channel.guild.iconURL;
         let avatar = msg.channel.guild.iconURL ? msg.channel.guild.iconURL.substring(0, msg.channel.guild.iconURL.length - 3) + "webp" : '';
         try {
             let reply = {
@@ -34,7 +33,7 @@ class ServerInfo extends Command {
                         icon_url: avatar
                     },
                     fields: this.buildGuildInfo(msg),
-                    image: {url: avatar},
+                    image: { url: avatar },
                     color: 0x00ADFF
                 }
             };
@@ -50,33 +49,34 @@ class ServerInfo extends Command {
     buildGuildInfo(msg) {
         let fields = [];
         let guild = msg.channel.guild;
-        let voice = guild.channels.filter(c => c.type === 2);
+        // let voice = guild.channels.filter(c => c.type === 2);
         let owner = msg.channel.guild.members.find(m => m.id === guild.ownerID);
-        fields.push({name: this.t('server-info.id', {lngs: msg.lang}), value: guild.id, inline: true});
-        fields.push({name: this.t('server-info.name', {lngs: msg.lang}), value: guild.name, inline: true});
+        fields.push({ name: this.t('server-info.id', { lngs: msg.lang }), value: guild.id, inline: true });
+        fields.push({ name: this.t('server-info.name', { lngs: msg.lang }), value: guild.name, inline: true });
         fields.push({
-            name: this.t('user-info.created', {lngs: msg.lang}),
+            name: this.t('user-info.created', { lngs: msg.lang }),
             value: moment().to(guild.createdAt),
             inline: true
         });
-        fields.push({name: this.t('server-info.member', {lngs: msg.lang}), value: guild.memberCount, inline: true});
+        fields.push({ name: this.t('server-info.member', { lngs: msg.lang }), value: guild.memberCount, inline: true });
         fields.push({
-            name: this.t('server-info.text', {lngs: msg.lang}),
+            name: this.t('server-info.text', { lngs: msg.lang }),
             value: guild.channels.filter(c => c.type === 0).length,
             inline: true
         });
         fields.push({
-            name: this.t('server-info.voice', {lngs: msg.lang}),
+            name: this.t('server-info.voice', { lngs: msg.lang }),
             value: guild.channels.filter(c => c.type === 2).length,
             inline: true
         });
-        fields.push({name: this.t('server-info.roles', {lngs: msg.lang}), value: guild.roles.size, inline: true});
+        fields.push({ name: this.t('server-info.roles', { lngs: msg.lang }), value: guild.roles.size, inline: true });
         fields.push({
-            name: this.t('server-info.owner', {lngs: msg.lang}),
+            name: this.t('server-info.owner', { lngs: msg.lang }),
             value: owner ? `${owner.user.username}#${owner.user.discriminator}` : ':x: ',
             inline: true
         });
         return fields;
     }
 }
+
 module.exports = ServerInfo;

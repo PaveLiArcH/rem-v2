@@ -4,6 +4,7 @@
 // let MessageCollector = require('discord.js').MessageCollector;
 let AsciiTable = require('ascii-table');
 let winston = require('winston');
+
 class Selector {
     constructor(msg, collection, t, cb) {
         this.msg = msg;
@@ -28,7 +29,7 @@ class Selector {
             }
             i += 1;
         });
-        table.addRow('c', this.t('generic.cancel', {lngs: this.msg.lang}));
+        table.addRow('c', this.t('generic.cancel', { lngs: this.msg.lang }));
         this.msg.channel.createMessage('```' + table.toString() + '```').then(tableMsg => {
             let collector = this.msg.CON.addCollector(this.msg.channel.id);
             collector.on('message', (msg) => {
@@ -67,4 +68,5 @@ class Selector {
         }
     }
 }
+
 module.exports = Selector;

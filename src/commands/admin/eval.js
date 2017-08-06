@@ -2,10 +2,12 @@
  * Created by Julian/Wolke on 07.11.2016.
  */
 const Command = require('../../structures/command');
+
 const adminId = remConfig.owner_id;
 const util = require('util');
+
 class EvalCode extends Command {
-    constructor ({t, mod}) {
+    constructor({ t, mod }) {
         super();
         this.cmd = 'eval';
         this.cat = 'admin';
@@ -17,7 +19,7 @@ class EvalCode extends Command {
         this.mod = mod;
     }
 
-    async run (msg) {
+    async run(msg) {
         if (msg.author.id === adminId) {
             let content = msg.content.substring(`${msg.prefix}eval`.length);
             if (content) {
@@ -35,4 +37,5 @@ class EvalCode extends Command {
         }
     }
 }
+
 module.exports = EvalCode;

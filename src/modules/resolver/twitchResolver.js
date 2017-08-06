@@ -4,9 +4,12 @@
 let Song = require('../../structures/song');
 let BasicImporter = require('../../structures/basicImporter');
 let youtube_dl = require('youtube-dl');
+
 Promise.promisifyAll(youtube_dl);
 let SongTypes = require('../../structures/constants').SONG_TYPES;
+
 let regex = /(?:http(?:s|):\/\/|)(?:www\.|)twitch\.tv\/.+/;
+
 class TwitchResolver extends BasicImporter {
     constructor() {
         super();
@@ -55,4 +58,5 @@ class TwitchResolver extends BasicImporter {
         return info.formats[0].url;
     }
 }
+
 module.exports = new TwitchResolver();

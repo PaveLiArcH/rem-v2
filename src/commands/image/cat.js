@@ -4,8 +4,9 @@
 let Command = require('../../structures/command');
 let winston = require('winston');
 let axios = require('axios');
+
 class Cat extends Command {
-    constructor({t}) {
+    constructor({ t }) {
         super();
         this.cmd = 'cat';
         this.cat = 'image';
@@ -21,8 +22,9 @@ class Cat extends Command {
             msg.channel.createMessage(url);
         } catch (e) {
             winston.error(e);
-            msg.channel.createMessage(this.t('generic.error', {lngs: msg.lang}));
+            msg.channel.createMessage(this.t('generic.error', { lngs: msg.lang }));
         }
     }
 }
+
 module.exports = Cat;

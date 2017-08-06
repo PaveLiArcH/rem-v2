@@ -3,7 +3,9 @@
  */
 let Command = require('../../structures/command');
 let Selector = require('../../structures/selector');
+
 let track_error = !remConfig.no_error_tracking;
+
 /**
  * The addToQueueCommand
  * @extends Command
@@ -16,7 +18,7 @@ class AddToQueue extends Command {
      * @param {Object} v - the voice manager
      * @param mod
      */
-    constructor({t, v, mod}) {
+    constructor({ t, v, mod }) {
         super();
         this.cmd = 'qa';
         this.cat = 'music';
@@ -30,7 +32,7 @@ class AddToQueue extends Command {
     async run(msg) {
         msg.content = msg.content.split(' ').splice(1).join(' ');
         if (msg.content === '') {
-            return msg.channel.createMessage(this.t('generic.empty-search', {lngs: msg.lang}));
+            return msg.channel.createMessage(this.t('generic.empty-search', { lngs: msg.lang }));
         }
         try {
             let res = await this.v.addToQueue(msg, false);
@@ -46,7 +48,7 @@ class AddToQueue extends Command {
         } catch (err) {
             if (err instanceof TranslatableError) {
                 console.error(err);
-                msg.channel.createMessage(this.t(err instanceof TranslatableError ? err.t : 'generic.error', {lngs: msg.lang}));
+                msg.channel.createMessage(this.t(err instanceof TranslatableError ? err.t : 'generic.error', { lngs: msg.lang }));
             } else {
                 if (track_error) {
                     this.r.captureException(err, {
@@ -60,19 +62,20 @@ class AddToQueue extends Command {
                 }
                 // console.error(err);
                 console.error(err);
-                msg.channel.createMessage(this.t('generic.error', {lngs: msg.lang}));
+                msg.channel.createMessage(this.t('generic.error', { lngs: msg.lang }));
             }
         }
     }
 
     searchResult(msg, results) {
-        let selector = new Selector(msg, results, this.t, (err, number) => {
+        let selector = new Selector(msg, results, this.t, (err, number) => {    // eslint-disable-line no-unused-vars
             if (err) {
-                return msg.channel.createMessage(this.t(err, {lngs: msg.lang}));
+                return msg.channel.createMessage(this.t(err, { lngs: msg.lang }));
             }
             msg.content = `!w.qa ${results[number - 1].url}`;
             this.run(msg);
         });
     }
 }
+
 module.exports = AddToQueue;

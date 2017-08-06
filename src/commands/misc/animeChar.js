@@ -3,10 +3,10 @@
  */
 let Command = require('../../structures/command');
 let axios = require('axios');
-let winston = require('winston');
 const Menu = require('../../structures/menu');
+
 class AnimeSearch extends Command {
-    constructor({t}) {
+    constructor({ t }) {
         super();
         this.cmd = 'char';
         this.cat = 'misc';
@@ -18,12 +18,12 @@ class AnimeSearch extends Command {
             short: 'help.char.short',
             usage: 'help.char.usage',
             example: 'help.char.example'
-        }
+        };
     }
 
     async run(msg) {
         let searchQuery = msg.content.substring(msg.prefix.length + this.cmd.length + 1);
-        if (!searchQuery) return await msg.channel.createMessage(this.t('generic.empty-search', {lngs: msg.lang}));
+        if (!searchQuery) return await msg.channel.createMessage(this.t('generic.empty-search', { lngs: msg.lang }));
         try {
             let authRequest = await axios.post(`https://anilist.co/api/auth/access_token`, {
                 grant_type: 'client_credentials',
@@ -33,11 +33,11 @@ class AnimeSearch extends Command {
             let accessToken = authRequest.data.access_token;
             let characterRequest = await axios({
                 url: `https://anilist.co/api/character/search/${encodeURI(searchQuery)}`,
-                params: {access_token: accessToken}
+                params: { access_token: accessToken }
             });
             if (characterRequest.data.error) {
                 if (characterRequest.data.error.messages[0] === 'No Results.') {
-                    return msg.channel.createMessage(this.t('define.no-result', {lngs: msg.lang, term: searchQuery}));
+                    return msg.channel.createMessage(this.t('define.no-result', { lngs: msg.lang, term: searchQuery }));
                 }
             }
             // console.log(characterRequest.data);
@@ -45,11 +45,11 @@ class AnimeSearch extends Command {
                 let embed = this.buildResponse(characterRequest.data[0]);
                 return msg.channel.createMessage(embed);
             } else if (characterRequest.data.length > 1) {
-                let pick = await new Menu(this.t('search.anime', {lngs: msg.lang}), this.t('menu.guide', {lngs: msg.lang}), characterRequest.data.map(c => {
-                    return `${c.name_first} ${c.name_last ? c.name_last : ''} ${c.name_japanese ? ('(' + c.name_japanese + ')') : ''}`
+                let pick = await new Menu(this.t('search.anime', { lngs: msg.lang }), this.t('menu.guide', { lngs: msg.lang }), characterRequest.data.map(c => {
+                    return `${c.name_first} ${c.name_last ? c.name_last : ''} ${c.name_japanese ? ('(' + c.name_japanese + ')') : ''}`;
                 }).slice(0, 15), this.t, msg);
                 if (pick === -1) {
-                    return msg.channel.createMessage(this.t('generic.cancelled-command', {lngs: msg.lang}));
+                    return msg.channel.createMessage(this.t('generic.cancelled-command', { lngs: msg.lang }));
                 }
                 if (pick > -1) {
                     let character = characterRequest.data[pick];
@@ -57,11 +57,11 @@ class AnimeSearch extends Command {
                     return msg.channel.createMessage(embed);
                 }
             } else {
-                return msg.channel.createMessage(this.t('define.no-result', {lngs: msg.lang, term: searchQuery}));
+                return msg.channel.createMessage(this.t('define.no-result', { lngs: msg.lang, term: searchQuery }));
             }
         } catch (e) {
             console.error(e);
-            await msg.channel.createMessage(this.t('generic.error', {lngs: msg.lang}));
+            await msg.channel.createMessage(this.t('generic.error', { lngs: msg.lang }));
         }
     }
 
@@ -102,4 +102,5 @@ class AnimeSearch extends Command {
         return info;
     }
 }
+
 module.exports = AnimeSearch;

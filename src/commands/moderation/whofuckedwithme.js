@@ -3,8 +3,9 @@
  */
 let Command = require('../../structures/command');
 let msgModel = require('../../DB/message');
+
 class WhoFuckedWithMe extends Command {
-    constructor({t}) {
+    constructor({ t }) {
         super();
         this.cmd = 'wfwm';
         this.cat = 'moderation';
@@ -16,7 +17,7 @@ class WhoFuckedWithMe extends Command {
 
     run(msg) {
         let content = msg.content.substr(msg.prefix.length + this.cmd.length).trim();
-        msgModel.findOne({id: content}, (err, MSG) => {
+        msgModel.findOne({ id: content }, (err, MSG) => {
             if (err) return msg.channel.createMessage('nya that was bad senpai, an error occured!');
             if (MSG) {
                 let reply = {
@@ -24,8 +25,8 @@ class WhoFuckedWithMe extends Command {
                         author: {
                             name: MSG.name
                         },
-                        fields: [{value: MSG.content, name: 'wrote:'}],
-                        footer: {text: `${MSG.time} - ${MSG.name}`},
+                        fields: [{ value: MSG.content, name: 'wrote:' }],
+                        footer: { text: `${MSG.time} - ${MSG.name}` },
                         color: 0x00ADFF
                     }
                 };
@@ -36,4 +37,5 @@ class WhoFuckedWithMe extends Command {
         });
     }
 }
+
 module.exports = WhoFuckedWithMe;

@@ -1,8 +1,9 @@
 /**
  * Created by Julian/Wolke on 17.12.2016.
  */
-let Reaction = require('../../DB/reaction');
+let Reaction = require('../../DB/reaction');            // eslint-disable-line no-unused-vars
 let Manager = require('../../structures/manager');
+
 let reactions = [
     // {id: '208911955140804608', guildId: '208911955140804608', trigger: '/o/', response: '\\o\\', type: 'exact'},
     // {
@@ -21,6 +22,7 @@ let reactions = [
     //     type: 'regex'
     // }
 ];
+
 class ReactionManager extends Manager {
     constructor() {
         super();
@@ -30,15 +32,15 @@ class ReactionManager extends Manager {
 
     }
 
-    getReaction(msg) {
+    getReaction(msg) {  // eslint-disable-line no-unused-vars
 
     }
 
-    getReactionList(id) {
+    getReactionList(id) {  // eslint-disable-line no-unused-vars
 
     }
 
-    removeReaction(guildId, reactionId) {
+    removeReaction(guildId, reactionId) {  // eslint-disable-line no-unused-vars
 
     }
 
@@ -63,4 +65,5 @@ class ReactionManager extends Manager {
         return reaction.replace('%USER%', msg.author.username).replace('%GUILD%', msg.channel.guild.name);
     }
 }
-module.exports = {class: ReactionManager, deps: [], async: false, shortcode: 'rm'};
+
+module.exports = { class: ReactionManager, deps: [], async: false, shortcode: 'rm' };

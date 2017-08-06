@@ -2,6 +2,7 @@ let Command = require('../../structures/command');
 let _ = require("lodash");
 let Radio = require('../../structures/radio');
 let SongTypes = require('../../structures/constants').SONG_TYPES;
+
 /**
  * The addShizaToQueueCommand
  * @extends Command
@@ -14,7 +15,7 @@ class AddShizaToQueue extends Command {
      * @param {Object} v - the voice manager
      * @param mod
      */
-    constructor({t, v, mod}) {
+    constructor({ t, v, mod }) {
         super();
         this.cmd = 'shiza';
         this.cat = 'radio';
@@ -56,12 +57,12 @@ class AddShizaToQueue extends Command {
                     user: `${msg.author.username}#${msg.author.discriminator}`
                 }));
             }
-            msg.channel.createMessage(this.t('qa.success', {song: res.title, lngs: msg.lang, user: res.queuedBy}));
+            msg.channel.createMessage(this.t('qa.success', { song: res.title, lngs: msg.lang, user: res.queuedBy }));
         } catch (e) {
             if (e.t) {
-                return msg.channel.createMessage(this.t(e.t, {lngs: msg.lang}));
+                return msg.channel.createMessage(this.t(e.t, { lngs: msg.lang }));
             }
-            return msg.channel.createMessage(this.t('generic.error', {lngs: msg.lang}))
+            return msg.channel.createMessage(this.t('generic.error', { lngs: msg.lang }));
         }
     }
 
@@ -76,7 +77,8 @@ class AddShizaToQueue extends Command {
         if (index > -1) {
             instant = true;
         }
-        return {next, instant};
+        return { next, instant };
     }
 }
+
 module.exports = AddShizaToQueue;

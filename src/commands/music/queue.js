@@ -2,8 +2,8 @@
  * Created by Julian/Wolke on 07.11.2016.
  */
 let Command = require('../../structures/command');
-let util = require('util');
 const winston = require('winston');
+
 /**
  * The show queue command,
  * shows the current queue
@@ -16,7 +16,7 @@ class Queue extends Command {
      * @param {Function} t - the translation module
      * @param {Object} v - the voice manager
      */
-    constructor({t, v}) {
+    constructor({ t, v }) {
         super();
         this.cmd = 'queue';
         this.cat = 'music';
@@ -24,7 +24,7 @@ class Queue extends Command {
         this.t = t;
         this.v = v;
         this.accessLevel = 0;
-        this.aliases = ['q']
+        this.aliases = ['q'];
     }
 
     /**
@@ -37,7 +37,7 @@ class Queue extends Command {
             msg.channel.createMessage(this.buildReply(queue, msg));
         } catch (err) {
             console.error(err);
-            msg.channel.createMessage(this.t(err instanceof TranslatableError ? err.t : 'generic.error', {lngs: msg.lang}));
+            msg.channel.createMessage(this.t(err instanceof TranslatableError ? err.t : 'generic.error', { lngs: msg.lang }));
         }
     }
 
@@ -49,9 +49,9 @@ class Queue extends Command {
     buildReply(Queue, msg) {
         let reply;
         winston.debug(Queue);
-        let repeat = Queue.repeat !== 'off' ? this.t(`np.repeat-${Queue.repeat}`, {lngs: msg.lang}) : '';
+        let repeat = Queue.repeat !== 'off' ? this.t(`np.repeat-${Queue.repeat}`, { lngs: msg.lang }) : '';
         if (!Queue.songs[0] || Queue.songs.length === 0) {
-            return msg.channel.createMessage(this.t('generic.no-song-in-queue', {lngs: msg.lang}));
+            return msg.channel.createMessage(this.t('generic.no-song-in-queue', { lngs: msg.lang }));
         }
         if (Queue.songs[0].duration && Queue.songs[0].duration !== '') {
             reply = `${this.t('np.song-duration', {
@@ -60,7 +60,7 @@ class Queue extends Command {
                 repeat: repeat,
                 duration: Queue.songs[0].duration,
                 current: Queue.time,
-                interpolation: {escape: false},
+                interpolation: { escape: false },
                 user: Queue.songs[0].queuedBy ? Queue.songs[0].queuedBy : '-'
             })} \n`;
         } else {
@@ -68,12 +68,12 @@ class Queue extends Command {
                 lngs: msg.lang,
                 title: Queue.songs[0].title,
                 repeat: repeat,
-                interpolation: {escape: false},
+                interpolation: { escape: false },
                 user: Queue.songs[0].queuedBy ? Queue.songs[0].queuedBy : '-'
             })}\n`;
         }
         if (Queue.songs.length > 1) {
-            reply += `${this.t('queue.queued', {lngs: msg.lang})}\n\`\`\``;
+            reply += `${this.t('queue.queued', { lngs: msg.lang })}\n\`\`\``;
         }
         for (let q = 1; q < Queue.songs.length; q++) {
             if (!Queue.songs[q]) continue;

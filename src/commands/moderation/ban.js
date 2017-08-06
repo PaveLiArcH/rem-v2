@@ -2,11 +2,13 @@
  * Created by Julian on 25.05.2017.
  */
 const Command = require('../../structures/command');
-const regs = {user: /<?(?:@|@!)([0-9]+)>/};
+
+const regs = { user: /<?(?:@|@!)([0-9]+)>/ };
 const utils = require('../../structures/utilities');
 const searcher = require('../../structures/searcher');
+
 class Ban extends Command {
-    constructor({t, mod}) {
+    constructor({ t, mod }) {  // eslint-disable-line no-unused-vars
         super();
         this.cmd = 'ban';
         this.aliases = ['b', 'banne'];
@@ -18,7 +20,7 @@ class Ban extends Command {
             short: 'help.ban.short',
             usage: 'help.ban.usage',
             example: 'help.ban.example'
-        }
+        };
     }
 
     async run(msg) {
@@ -26,7 +28,7 @@ class Ban extends Command {
         let msgSplit = msg.content.split(' ').splice(1);
         //Give an error if no args are passed
         if (msgSplit.length === 0) {
-            return msg.channel.createMessage(this.t('ban.no-mention', {lngs: msg.lang}));
+            return msg.channel.createMessage(this.t('ban.no-mention', { lngs: msg.lang }));
         }
         //Check if rem has perms to ban users
         let remMember = msg.channel.guild.members.find(m => m.user.id === rem.user.id);
@@ -46,13 +48,13 @@ class Ban extends Command {
             let days = 0;
             let time = msgSplit[index + 1];
             if (time.endsWith('d') && time.length === 2) {
-                time = time.substring(0, 1)
+                time = time.substring(0, 1);
             }
             try {
                 days = parseInt(time);
                 if (!isNaN(days) && days > -1 && days < 8) {
                     deleteDays = days;
-                    msgSplit.splice(index, 2)
+                    msgSplit.splice(index, 2);
                 }
             } catch (e) {
                 console.error(e);
@@ -88,10 +90,10 @@ class Ban extends Command {
                 let users = utils.searchUser(msg.channel.guild.members, user);
                 let pick = await searcher.userSearchMenu(msg, [user], this.t);
                 if (pick === -1) {
-                    return msg.channel.createMessage(this.t('generic.cancelled-command', {lngs: msg.lang}));
+                    return msg.channel.createMessage(this.t('generic.cancelled-command', { lngs: msg.lang }));
                 }
                 if (pick === -2) {
-                    return msg.channel.createMessage(this.t('search.no-results', {lngs: msg.lang}));
+                    return msg.channel.createMessage(this.t('search.no-results', { lngs: msg.lang }));
                 }
                 if (pick > -1) {
                     target = users[pick];
@@ -100,15 +102,15 @@ class Ban extends Command {
         }
         //if there was no target found
         if (typeof(target) === 'undefined') {
-            return msg.channel.createMessage(this.t('ban.no-mention', {lngs: msg.lang}));
+            return msg.channel.createMessage(this.t('ban.no-mention', { lngs: msg.lang }));
         }
         //if the user tries to ban themselves
         if (target.user.id === msg.author.id) {
-            return msg.channel.createMessage(this.t('ban.self-user', {lngs: msg.lang}))
+            return msg.channel.createMessage(this.t('ban.self-user', { lngs: msg.lang }));
         }
         //if the user tries to ban the owner
         if (target.user.id === msg.channel.guild.ownerID) {
-            return msg.channel.createMessage(this.t('ban.privilege_owner', {lngs: msg.lang}));
+            return msg.channel.createMessage(this.t('ban.privilege_owner', { lngs: msg.lang }));
         }
         //add a reason if there was no reason passed
         if (reason === '') {
@@ -127,7 +129,7 @@ class Ban extends Command {
         }
         //check if the role of the user is higher than the role of the user he want's to ban
         if (utils.getHighestRolePosition(target, msg.channel.guild.roles) > utils.getHighestRolePosition(msg.member, msg.channel.guild.roles) && msg.channel.guild.ownerID !== msg.author.id) {
-            return msg.channel.createMessage(this.t('ban.privilege', {lngs: msg.lang}));
+            return msg.channel.createMessage(this.t('ban.privilege', { lngs: msg.lang }));
         }
         //check if rem's role is higher than the role of the user that should be baned
         if (utils.getHighestRolePosition(target, msg.channel.guild.roles) > utils.getHighestRolePosition(msg.channel.guild.members.find(m => m.user.id === rem.user.id), msg.channel.guild.roles)) {
@@ -153,8 +155,9 @@ class Ban extends Command {
                 }));
             }
             //return a generic error
-            return msg.channel.createMessage(this.t('generic.error', {lngs: msg.lang}));
+            return msg.channel.createMessage(this.t('generic.error', { lngs: msg.lang }));
         }
     }
 }
+
 module.exports = Ban;

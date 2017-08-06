@@ -2,11 +2,13 @@
  * Created by Wolke on 06.06.2017.
  */
 let Command = require('../../structures/command');
-const regs = {user: /<?(?:@|@!)([0-9]+)>/};
+
+const regs = { user: /<?(?:@|@!)([0-9]+)>/ };
 const utils = require('../../structures/utilities');
 const searcher = require('../../structures/searcher');
+
 class Ship extends Command {
-    constructor({t}) {
+    constructor({ t }) {
         super();
         this.cat = 'fun';
         this.cmd = 'ship';
@@ -16,7 +18,7 @@ class Ship extends Command {
             short: 'help.ship.short',
             usage: 'help.ship.usage',
             example: 'help.ship.example'
-        }
+        };
     }
 
     async run(msg) {
@@ -28,7 +30,7 @@ class Ship extends Command {
                 user: msg.member.nick ? msg.member.nick : msg.author.username
             }));
         }
-        let targets = {t1: msg.member, t2: undefined};
+        let targets = { t1: msg.member, t2: undefined };
         for (let i = 0; i < msgSplit.length; i++) {
             if (regs.user.test(msgSplit[i])) {
                 let id = "";
@@ -47,17 +49,17 @@ class Ship extends Command {
                 let users = utils.searchUser(msg.channel.guild.members, msgSplit[i]);
                 let pick = await searcher.userSearchMenu(msg, [msgSplit[i]], this.t);
                 if (pick === -1) {
-                    return msg.channel.createMessage(this.t('generic.cancelled-command', {lngs: msg.lang}));
+                    return msg.channel.createMessage(this.t('generic.cancelled-command', { lngs: msg.lang }));
                 }
                 if (pick === -2) {
-                    return msg.channel.createMessage(this.t('search.no-results', {lngs: msg.lang}));
+                    return msg.channel.createMessage(this.t('search.no-results', { lngs: msg.lang }));
                 }
                 if (pick > -1) {
                     let targetUser = users[pick];
                     if (targets.t2 === undefined) {
-                        targets.t2 = targetUser
+                        targets.t2 = targetUser;
                     } else {
-                        targets.t1 = targetUser
+                        targets.t1 = targetUser;
                     }
                 }
             }
@@ -75,7 +77,7 @@ class Ship extends Command {
             }));
         }
         let shipname = this.getShipname(targets);
-        return msg.channel.createMessage(this.t('ship.success', {lngs: msg.lang, shipname}))
+        return msg.channel.createMessage(this.t('ship.success', { lngs: msg.lang, shipname }));
     }
 
     getShipname(targets) {
@@ -93,4 +95,5 @@ class Ship extends Command {
         return name;
     }
 }
+
 module.exports = Ship;

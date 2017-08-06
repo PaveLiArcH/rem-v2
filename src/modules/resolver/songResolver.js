@@ -8,11 +8,13 @@ let twitch = require('./twitchResolver');
 let youtubePlaylist = require('./youtubePlaylistResolver');
 const winston = require('winston');
 let crypto = require('crypto');
+
 let keys;
 let Cache;
 let searchCache;
 let KeyManager = require('../keyManager');
 let axios = require('axios');
+
 if (remConfig.redis_enabled) {
     Cache = require('./../../structures/redisCache');
     winston.debug('Using Redis Cache for Searches!');
@@ -23,7 +25,7 @@ if (remConfig.redis_enabled) {
 }
 try {
     if (process.env.secret_keys_name) {
-        keys = require(`/run/secrets/${process.env.secret_keys_name}`).keys;
+        keys = require(`/run/secrets/${process.env.secret_keys_name}`).keys;        // eslint-disable-line import/no-dynamic-require
     } else {
         keys = require('../../../config/keys.json').keys;
     }
@@ -38,11 +40,12 @@ let opts = {
     type: 'video',
     order: 'relevance'
 };
+
 class SongResolver {
     constructor(redis) {
         this.redis = redis;
-        this.resolvers = {youtube, soundcloud, osu, twitch};
-        this.playlistResolvers = {youtubePlaylist};
+        this.resolvers = { youtube, soundcloud, osu, twitch };
+        this.playlistResolvers = { youtubePlaylist };
         if (remConfig.redis_enabled) {
             searchCache = new Cache(redis);
         }
@@ -92,7 +95,7 @@ class SongResolver {
                 }
             }
         }
-        throw new TranslatableError({t: 'generic.error', message: 'This playlist is not supported.'});
+        throw new TranslatableError({ t: 'generic.error', message: 'This playlist is not supported.' });
     }
 
     async search(search) {
@@ -123,12 +126,12 @@ class SongResolver {
                         id: item.id.videoId,
                         url: `https://youtube.com/watch?v=${item.id.videoId}`,
                         title: item.snippet.title
-                    }
+                    };
                 });
                 await searchCache.set(`youtube_search_${searchHash}`, actualResult);
                 return actualResult;
             } else {
-                throw new TranslatableError({t: 'generic.error', message: 'empty search returned!'});
+                throw new TranslatableError({ t: 'generic.error', message: 'empty search returned!' });
             }
         }
     }
@@ -159,4 +162,5 @@ class SongResolver {
         return url;
     }
 }
+
 module.exports = SongResolver;

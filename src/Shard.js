@@ -3,28 +3,34 @@
  */
 //uwu
 const winston = require('winston');
+
 let useCrystal = remConfig.use_crystal;
 let VoiceConnectionManager;
 if (useCrystal) {
-    VoiceConnectionManager = require('eris-novum').VoiceConnectionManager;
+    VoiceConnectionManager = require('eris-novum').VoiceConnectionManager;// eslint-disable-line
     // VoiceConnectionManager = require('../../../Rem NEXT/voice/eris-novum/src/exports').VoiceConnectionManager;
 }
 let Eris = require('eris');
 const StatsD = require('hot-shots');
-const dogstatsd = new StatsD({host: remConfig.statsd_host});
+
+const dogstatsd = new StatsD({ host: remConfig.statsd_host });
 const guildModel = require('./DB/guild');
 const mongoose = require('mongoose');
+
 const url = remConfig.mongo_hostname;
 let Connector = require('./structures/connector');
 let ModuleManager = require('./modules/moduleManager');
+
 mongoose.Promise = Promise;
-mongoose.connect(url, {useMongoClient: true}, (err) => {
+mongoose.connect(url, { useMongoClient: true }, (err) => {
     if (err) return winston.error('Failed to connect to the database!');
 });
 let redis = require("redis");
+
 const stat = `rem_${remConfig.environment}`;
 const blocked = require('blocked');
 const procToWs = require('./ws/procToWs');
+
 const hub = new procToWs();
 // let memwatch = require('memwatch-next');
 // memwatch.on('leak', function(info) {
@@ -66,7 +72,7 @@ class Shard {
         try {
             Promise.promisifyAll(redis.RedisClient.prototype);
             Promise.promisifyAll(redis.Multi.prototype);
-        } catch (e) {
+        } catch (e) {   // eslint-disable-line empty-block
 
         }
         // }
@@ -143,10 +149,10 @@ class Shard {
     initClient() {
         this.bot.on('ready', () => {
             if (this.SHARDED) {
-                this.HUB.send({action: 'updateState', d: {state: 'discord_ready'}});
+                this.HUB.send({ action: 'updateState', d: { state: 'discord_ready' } });
             }
             // console.log('READY!');
-            this.bot.editStatus('online', {name: '!w.help for commands'});
+            this.bot.editStatus('online', { name: '!w.help for commands' });
             this.clientReady();
         });
         this.bot.on('messageCreate', (msg) => {
@@ -222,13 +228,13 @@ class Shard {
 
     guildCreate(Guild) {
         this.sendStats();
-        guildModel.findOne({id: Guild.id}, (err, guild) => {
+        guildModel.findOne({ id: Guild.id }, (err, guild) => {
             if (err) {
                 this.Raven.captureError(err);
                 return winston.error(err);
             }
             if (guild) {
-
+                // if exist
             } else {
                 let guild = new guildModel({
                     id: Guild.id,
@@ -248,7 +254,7 @@ class Shard {
         });
     }
 
-    guildDelete(Guild) {
+    guildDelete() {
         this.sendStats();
     }
 
@@ -293,7 +299,7 @@ class Shard {
         }
     }
 
-    voiceUpdate(member, channel, leave) {
+    voiceUpdate(member, channel, leave) {     // eslint-disable-line no-unused-vars
         // if (!leave) {
         //     console.log('user joined voice!');
         // } else {
@@ -344,7 +350,7 @@ class Shard {
                 channels: this.bot.guilds.map(g => g.channels.size).reduce((a, b) => a + b),
                 voice: rem.voiceConnections.size,
                 voice_active: rem.voiceConnections.filter((vc) => vc.playing).length
-            }))
+            }));
         }
         if (this.SHARDED) {
             this.HUB.updateStats({
@@ -379,7 +385,7 @@ class Shard {
                     user.found = true;
                     this.resolveAction(event, user);
                 } else {
-                    this.resolveAction(event, {found: false});
+                    this.resolveAction(event, { found: false });
                 }
                 return;
             }
@@ -389,7 +395,7 @@ class Shard {
                     guild.found = true;
                     this.resolveAction(event, this.simplifyGuildData(guild));
                 } else {
-                    this.resolveAction(event, {found: false});
+                    this.resolveAction(event, { found: false });
                 }
                 return;
             }
@@ -425,4 +431,5 @@ class Shard {
         }
     }
 }
+
 module.exports = Shard;

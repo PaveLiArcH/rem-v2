@@ -2,32 +2,33 @@
  * Created by Julian/Wolke on 23.07.2016.
  */
 let mongoose = require('mongoose');
+
 let userSchema = mongoose.Schema({
     id: String,
     name: String,
     servers: [],
     settings: [],
     marriages: [],
-    levelEnabled: {type: Boolean, default: true},
-    pmNotifications: {type: Boolean, default: true},
+    levelEnabled: { type: Boolean, default: true },
+    pmNotifications: { type: Boolean, default: true },
     avatar: String,
-    created: {type: Date, default: new Date(0)},
-    blacklist: {type: Boolean, default: false},
-    verified: {type: Boolean, default: false},
-    proxerId: {type: String, default: ''},
-    verificationToken: {type: String, default: ''},
-    credits: {type: Number, default: 0},
-    rep: {type: Number, default: 0},
-    creditCooldown: {type: Date, default: new Date(0)},
+    created: { type: Date, default: new Date(0) },
+    blacklist: { type: Boolean, default: false },
+    verified: { type: Boolean, default: false },
+    proxerId: { type: String, default: '' },
+    verificationToken: { type: String, default: '' },
+    credits: { type: Number, default: 0 },
+    rep: { type: Number, default: 0 },
+    creditCooldown: { type: Date, default: new Date(0) },
     reps: [],
-    accesslevel: {type: Number, default: 0}
+    accesslevel: { type: Number, default: 0 }
 
 });
 // userSchema.methods.updateXP = function updateXP(id,xp,cb) {
 //     this.model('Users').update({id:this.id, 'servers.serverId':id}, {$inc: {'servers.$.xp': xp,'servers.$.totalXp': xp}, $set:{'servers.$.cooldown':Date.now()}}, cb);
 // };
 userSchema.methods.updateRep = function updateXP(rep, cb) {
-    this.model('Users').update({id: this.id}, {$inc: {rep: rep}}, cb);
+    this.model('Users').update({ id: this.id }, { $inc: { rep: rep } }, cb);
 };
 // userSchema.methods.updateLevel = function updateLevel(id,cb) {
 //     this.model('Users').update({id:this.id, 'servers.serverId':id}, {$set: {'servers.$.xp': 0}, $inc:{'servers.$.level':1}}, cb);

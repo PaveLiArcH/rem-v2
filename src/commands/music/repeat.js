@@ -2,6 +2,7 @@
  * Created by Julian/Wolke on 07.11.2016.
  */
 let Command = require('../../structures/command');
+
 /**
  * The repeat command,
  * repeats the current song/the queue
@@ -14,7 +15,7 @@ class Repeat extends Command {
      * @param {Function} t - the translation module
      * @param {Object} v - the voice manager
      */
-    constructor({t, v}) {
+    constructor({ t, v }) {
         super();
         this.cmd = 'repeat';
         this.cat = 'music';
@@ -58,7 +59,8 @@ class Repeat extends Command {
             result = this.v.repeat(msg);
         }
 
-        msg.channel.createMessage(this.t(`np.emoji-repeat-${result}`, {lngs: msg.lang}));
+        msg.channel.createMessage(this.t(`np.emoji-repeat-${result}`, { lngs: msg.lang }));
     }
 }
+
 module.exports = Repeat;

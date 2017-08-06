@@ -2,8 +2,9 @@
  * Created by EpicPick on 13.11.2016.
  */
 let Command = require('../../structures/command');
+
 class FlipCoin extends Command {
-    constructor({t}) {
+    constructor({ t }) {
         super();
         this.cmd = 'coin';
         this.cat = 'fun';
@@ -24,7 +25,8 @@ class FlipCoin extends Command {
             url = 'https://cdn.ram.moe/Byu2fPLWg.png';
             reply = 'flip.tail';
         }
-        msg.channel.createMessage(this.t(reply, {lngs: msg.lang, url: url}));
+        msg.channel.createMessage(this.t(reply, { lngs: msg.lang, url: url }));
     }
 }
+
 module.exports = FlipCoin;
