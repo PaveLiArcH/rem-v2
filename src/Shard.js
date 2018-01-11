@@ -24,9 +24,10 @@ mongoose.connect(url, {useMongoClient: true}, (err) => {
 let redis = require("redis");
 const stat = `rem_${remConfig.environment}`;
 const blocked = require('blocked');
+let hub = null;
 if (remConfig.use_ws) {
     const procToWs = require('./ws/procToWs');
-    const hub = new procToWs();
+    hub = new procToWs();
 }
 // let memwatch = require('memwatch-next');
 // memwatch.on('leak', function(info) {
